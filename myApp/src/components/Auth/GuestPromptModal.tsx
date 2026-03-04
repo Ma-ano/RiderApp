@@ -11,6 +11,7 @@ import {
 } from '@ionic/react';
 import { personAddOutline, logInOutline, closeOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
+import { useTheme } from '../../context/ThemeContext';
 
 interface GuestPromptModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ interface GuestPromptModalProps {
 
 const GuestPromptModal: React.FC<GuestPromptModalProps> = ({ isOpen, onClose, onContinue }) => {
   const history = useHistory();
+  const { isDarkMode } = useTheme();
 
   const handleRegister = () => {
     onClose();
@@ -39,13 +41,16 @@ const GuestPromptModal: React.FC<GuestPromptModalProps> = ({ isOpen, onClose, on
       breakpoints={[0, 0.4]}
       initialBreakpoint={0.4}
     >
-      <IonContent className="ion-padding">
+      <IonContent 
+        className="ion-padding"
+        style={{ '--background': 'var(--ion-card-background)' } as any}
+      >
         <div style={{ textAlign: 'center', padding: '20px' }}>
           <div 
             style={{
               width: '80px',
               height: '80px',
-              background: 'linear-gradient(135deg, #d70f64 0%, #ff6b9d 100%)',
+              background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
@@ -57,10 +62,10 @@ const GuestPromptModal: React.FC<GuestPromptModalProps> = ({ isOpen, onClose, on
           </div>
           
           <IonText>
-            <h2 style={{ margin: '0 0 10px', fontWeight: 700, color: '#2d3436' }}>
+            <h2 style={{ margin: '0 0 10px', fontWeight: 700, color: 'var(--ion-text-color)' }}>
               Almost there! 🎉
             </h2>
-            <p style={{ margin: '0 0 30px', color: '#636e72', lineHeight: 1.6 }}>
+            <p style={{ margin: '0 0 30px', color: 'var(--ion-text-color-secondary)', lineHeight: 1.6 }}>
               Create an account or login to complete your order and enjoy exclusive deals!
             </p>
           </IonText>
@@ -69,7 +74,7 @@ const GuestPromptModal: React.FC<GuestPromptModalProps> = ({ isOpen, onClose, on
             expand="block"
             className="rider-button"
             style={{ 
-              '--background': '#d70f64',
+              '--background': '#6366F1',
               marginBottom: '12px',
               height: '50px',
               fontSize: '16px'
@@ -85,8 +90,8 @@ const GuestPromptModal: React.FC<GuestPromptModalProps> = ({ isOpen, onClose, on
             fill="outline"
             className="rider-button"
             style={{ 
-              '--border-color': '#d70f64',
-              '--color': '#d70f64',
+              '--border-color': '#6366F1',
+              '--color': '#6366F1',
               marginBottom: '12px',
               height: '50px',
               fontSize: '16px'
@@ -99,7 +104,7 @@ const GuestPromptModal: React.FC<GuestPromptModalProps> = ({ isOpen, onClose, on
 
           <IonButton
             fill="clear"
-            style={{ '--color': '#636e72' }}
+            style={{ '--color': 'var(--ion-text-color-secondary)' }}
             onClick={onClose}
           >
             Continue Browsing

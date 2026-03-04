@@ -309,7 +309,7 @@ const StallDetail: React.FC = () => {
                 <IonIcon icon={bicycle} />
               </div>
               <div className="stat-content">
-                <div className="stat-value">${stallInfo.deliveryFee.toFixed(2)}</div>
+                <div className="stat-value">₱{stallInfo.deliveryFee.toFixed(2)}</div>
                 <div className="stat-label">Delivery Fee</div>
               </div>
             </div>

@@ -21,12 +21,12 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemove })
       <div className="cart-item-content">
         <div className="cart-item-info">
           <h4 className="cart-item-name">{item.name}</h4>
-          <p className="cart-item-price">${item.price.toFixed(2)} x {item.quantity}</p>
+          <p className="cart-item-price">₱{item.price.toFixed(2)} x {item.quantity}</p>
         </div>
 
         <div className="cart-item-total">
           <span className="total-label">Total:</span>
-          <span className="total-amount">${(item.price * item.quantity).toFixed(2)}</span>
+          <span className="total-amount">₱{(item.price * item.quantity).toFixed(2)}</span>
         </div>
       </div>
 

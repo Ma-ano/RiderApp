@@ -7,6 +7,7 @@ interface PageHeaderProps {
   title?: string;
   showLogo?: boolean;
   showBack?: boolean;
+  showBackButton?: boolean;
   backHref?: string;
   cartCount?: number;
   onCartClick?: () => void;
@@ -18,6 +19,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   title = '',
   showLogo = true,
   showBack = false,
+  showBackButton = false,
   backHref = '/guest/home',
   cartCount = 0,
   onCartClick,
@@ -35,7 +37,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         } as any}
       >
         <IonButtons slot="start">
-          {showBack ? (
+          {showBack || showBackButton ? (
             <IonBackButton 
               defaultHref={backHref} 
               icon={arrowBack}

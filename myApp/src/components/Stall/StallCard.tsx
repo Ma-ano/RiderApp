@@ -58,7 +58,7 @@ const StallCard: React.FC<StallCardProps> = ({ stall, onClick }) => {
           </span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <IonIcon icon={bicycleOutline} />
-            ${stall.deliveryFee.toFixed(2)}
+            ₱{stall.deliveryFee.toFixed(2)}
           </span>
         </div>
       </IonCardHeader>

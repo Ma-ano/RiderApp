@@ -8,6 +8,7 @@ import {
   IonSegmentButton,
   IonLabel,
   IonToolbar,
+  IonButton,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
@@ -15,7 +16,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import PageHeader from '../../components/PageHeader';
 import StallCard from '../../components/Stall/StallCard';
-import { Stall } from '../../types';
+import { Stall, User } from '../../types';
 
 // Mock data - Same stalls as Guest
 const MOCK_STALLS: Stall[] = [
@@ -56,7 +57,7 @@ const MOCK_STALLS: Stall[] = [
 
 const UserHome: React.FC = () => {
   const history = useHistory();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const { itemCount } = useCart();
   const [stalls, setStalls] = useState<Stall[]>(MOCK_STALLS);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -132,8 +133,84 @@ const UserHome: React.FC = () => {
           </div>
         </div>
 
+        {/* Role Navigation */}
+        <div style={{ 
+          padding: '16px', 
+          display: 'flex', 
+          gap: '12px',
+          background: 'var(--ion-background-color)',
+          borderBottomLeftRadius: '12px',
+          borderBottomRightRadius: '12px'
+        }}>
+          <IonButton
+            expand="block"
+            style={{
+              '--background': '#6366F1',
+              '--color': '#FFFFFF',
+              height: '44px',
+              fontSize: '14px',
+              fontWeight: 600,
+              textTransform: 'none'
+            }}
+            onClick={() => history.push('/user/home')}
+          >
+            🛒 Order Food
+          </IonButton>
+        </div>
+
         {/* Stalls Grid */}
         <div style={{ padding: '16px' }}>
+          {/* Quick Access Menu */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: '10px',
+            marginBottom: '16px'
+          }}>
+            <div 
+              onClick={() => history.push('/activities')}
+              style={{
+                padding: '12px',
+                background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              <div style={{ fontSize: '24px', marginBottom: '4px' }}>📋</div>
+              <p style={{ margin: 0, fontSize: '11px', fontWeight: 600 }}>Activities</p>
+            </div>
+            <div 
+              onClick={() => history.push('/messages')}
+              style={{
+                padding: '12px',
+                background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              <div style={{ fontSize: '24px', marginBottom: '4px' }}>💬</div>
+              <p style={{ margin: 0, fontSize: '11px', fontWeight: 600 }}>Messages</p>
+            </div>
+            <div 
+              onClick={() => history.push('/report')}
+              style={{
+                padding: '12px',
+                background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              <div style={{ fontSize: '24px', marginBottom: '4px' }}>⚠️</div>
+              <p style={{ margin: 0, fontSize: '11px', fontWeight: 600 }}>Report</p>
+            </div>
+          </div>
+
           <h2 style={{ 
             fontSize: '20px', 
             fontWeight: 700, 

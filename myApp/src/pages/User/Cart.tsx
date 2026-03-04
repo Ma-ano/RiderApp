@@ -1,4 +1,4 @@
-// src/pages/Guest/Cart.tsx
+// src/pages/User/Cart.tsx
 import React, { useState } from 'react';
 import {
   IonPage,
@@ -13,28 +13,22 @@ import { locationOutline, bicycleOutline, cardOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import CartItem from '../../components/Cart/CartItem';
 import PageHeader from '../../components/PageHeader';
-import GuestPromptModal from '../../components/Auth/GuestPromptModal';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
-const GuestCart: React.FC = () => {
+const UserCart: React.FC = () => {
   const history = useHistory();
   const { items, updateQuantity, removeFromCart, total, itemCount } = useCart();
-  const { isGuest, logout } = useAuth();
+  const { logout } = useAuth();
   const { isDarkMode } = useTheme();
-  const [showGuestPrompt, setShowGuestPrompt] = useState(false);
 
   const deliveryFee = 2.99;
   const serviceFee = 1.49;
   const finalTotal = total + deliveryFee + serviceFee;
 
   const handleCheckout = () => {
-    if (isGuest) {
-      setShowGuestPrompt(true);
-    } else {
-      history.push('/checkout/payment');
-    }
+    history.push('/checkout/payment');
   };
 
   return (
@@ -42,16 +36,12 @@ const GuestCart: React.FC = () => {
       <PageHeader 
         showLogo={true}
         showBackButton={true}
-        backHref="/guest/home"
+        backHref="/user/home"
         cartCount={itemCount}
-        onCartClick={() => history.push('/guest/cart')}
+        onCartClick={() => history.push('/user/cart')}
         onProfileClick={() => {
-          if (isGuest) {
-            history.push('/login');
-          } else {
-            logout();
-            history.push('/login');
-          }
+          logout();
+          history.push('/login');
         }}
       />
 
@@ -98,7 +88,7 @@ const GuestCart: React.FC = () => {
                 '--background': '#6366F1',
                 '--border-radius': '8px'
               }}
-              onClick={() => history.push('/guest/home')}
+              onClick={() => history.push('/user/home')}
             >
               Browse Stalls
             </IonButton>
@@ -132,7 +122,7 @@ const GuestCart: React.FC = () => {
                 <p style={{ margin: '0 0 4px', fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>Deliver to</p>
                 <p style={{ margin: 0, fontWeight: 600, color: 'var(--ion-text-color)' }}>Current Location</p>
               </div>
-              <IonButton fill="clear" style={{ '--color': '#6366F1' }}>Change</IonButton>
+              <IonButton fill="clear" style={{ '--color': '#6366F1' }} onClick={() => history.push('/user/location')}>Change</IonButton>
             </div>
 
             {/* Cart Items */}
@@ -210,13 +200,8 @@ const GuestCart: React.FC = () => {
           </IonButton>
         </IonFooter>
       )}
-
-      <GuestPromptModal 
-        isOpen={showGuestPrompt} 
-        onClose={() => setShowGuestPrompt(false)} 
-      />
     </IonPage>
   );
 };
 
-export default GuestCart;
+export default UserCart;

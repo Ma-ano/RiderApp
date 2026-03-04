@@ -11,14 +11,16 @@ import {
   IonList,
   IonListHeader,
 } from '@ionic/react';
-import { personOutline, mailOutline, callOutline, logOutOutline, settingsOutline } from 'ionicons/icons';
+import { personOutline, mailOutline, callOutline, logOutOutline, settingsOutline, documentTextOutline, chatbubbleOutline, alertCircleOutline } from 'ionicons/icons';
 import { useTheme } from '../../context/ThemeContext';
+import { useHistory } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader';
 import { useAuth } from '../../context/AuthContext';
 
 const UserProfile: React.FC = () => {
   const { isDarkMode } = useTheme();
   const { logout } = useAuth();
+  const history = useHistory();
   const [profile, setProfile] = useState({
     name: 'John Doe',
     email: 'john@example.com',
@@ -156,6 +158,57 @@ const UserProfile: React.FC = () => {
                   fontSize: '14px'
                 }}
               />
+            </div>
+          </div>
+
+          {/* Quick Access Menu */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: '10px',
+            marginBottom: '20px'
+          }}>
+            <div 
+              onClick={() => history.push('/activities')}
+              style={{
+                padding: '12px',
+                background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              <div style={{ fontSize: '20px', marginBottom: '4px' }}>📋</div>
+              <p style={{ margin: 0, fontSize: '10px', fontWeight: 600 }}>Activity</p>
+            </div>
+            <div 
+              onClick={() => history.push('/messages')}
+              style={{
+                padding: '12px',
+                background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                color: 'white'
+              }}
+            >
+              <div style={{ fontSize: '20px', marginBottom: '4px' }}>💬</div>
+              <p style={{ margin: 0, fontSize: '10px', fontWeight: 600 }}>Messages</p>
+            </div>
+            <div 
+              onClick={() => history.push('/report')}
+              style={{
+                padding: '12px',
+                background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                textAlign: 'center',
+                color: '#1F2937'
+              }}
+            >
+              <div style={{ fontSize: '20px', marginBottom: '4px' }}>⚠️</div>
+              <p style={{ margin: 0, fontSize: '10px', fontWeight: 600 }}>Report</p>
             </div>
           </div>
 

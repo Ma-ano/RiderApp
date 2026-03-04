@@ -41,7 +41,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, quantity }) => {
         {/* Footer with Price and Button */}
         <div className="menu-item-footer">
           <div className="menu-item-price-section">
-            <span className="menu-item-price">${item.price.toFixed(2)}</span>
+            <span className="menu-item-price">₱{item.price.toFixed(2)}</span>
           </div>
           
           {quantity ? (
