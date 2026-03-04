@@ -132,7 +132,7 @@ const GuestCart: React.FC = () => {
                 <p style={{ margin: '0 0 4px', fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>Deliver to</p>
                 <p style={{ margin: 0, fontWeight: 600, color: 'var(--ion-text-color)' }}>Current Location</p>
               </div>
-              <IonButton fill="clear" style={{ '--color': '#6366F1' }}>Change</IonButton>
+              <IonButton fill="clear" style={{ '--color': '#6366F1' }} onClick={() => history.push('/guest/location')}>Change</IonButton>
             </div>
 
             {/* Cart Items */}

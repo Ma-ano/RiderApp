@@ -1,4 +1,4 @@
-// src/pages/User/LocationPicker.tsx
+// src/pages/Guest/LocationPicker.tsx
 import React, { useState, useEffect } from 'react';
 import {
   IonPage,
@@ -15,7 +15,7 @@ import {
 import { locationOutline, arrowBack } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 
-const LocationPicker: React.FC = () => {
+const GuestLocationPicker: React.FC = () => {
   const history = useHistory();
   const [address, setAddress] = useState('');
   const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -168,4 +168,4 @@ const LocationPicker: React.FC = () => {
   );
 };
 
-export default LocationPicker;
+export default GuestLocationPicker;

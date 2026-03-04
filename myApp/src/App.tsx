@@ -25,6 +25,7 @@ import './theme/global.css';
 import GuestHome from './pages/Guest/Home';
 import StallDetail from './pages/Guest/StallDetail';
 import GuestCart from './pages/Guest/Cart';
+import GuestLocationPicker from './pages/Guest/LocationPicker';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import RiderLogin from './pages/Auth/RiderLogin';
@@ -34,7 +35,7 @@ import AdminRegister from './pages/Auth/AdminRegister';
 import UserHome from './pages/User/Home';
 import UserProfile from './pages/User/Profile';
 import UserCart from './pages/User/Cart';
-import LocationPicker from './pages/User/LocationPicker';
+import UserLocationPicker from './pages/User/LocationPicker';
 import RiderHome from './pages/Rider/Home';
 import RiderOrders from './pages/Rider/Orders';
 import RiderEarnings from './pages/Rider/Earnings';
@@ -47,6 +48,7 @@ import AdminReports from './pages/Admin/Reports';
 import ActivityLog from './pages/Activities/ActivityLog';
 import Messages from './pages/Messages/Messages';
 import ReportIncident from './pages/Reports/ReportIncident';
+import Payment from './pages/Checkout/Payment';
 import ProtectedRoute from './components/ProtectedRoute';
 
 setupIonicReact({
@@ -65,12 +67,13 @@ const App: React.FC = () => (
               <Route exact path="/guest/home" component={GuestHome} />
               <Route exact path="/stall/:id" component={StallDetail} />
               <Route exact path="/guest/cart" component={GuestCart} />
+              <Route exact path="/guest/location" component={GuestLocationPicker} />
               
               {/* User Routes */}
               <Route exact path="/user/home" component={UserHome} />
               <Route exact path="/user/profile" component={UserProfile} />
               <Route exact path="/user/cart" component={UserCart} />
-              <Route exact path="/user/location" component={LocationPicker} />
+              <Route exact path="/user/location" component={UserLocationPicker} />
               
               {/* Rider Routes */}
               <Route exact path="/rider/home" component={RiderHome} />
@@ -95,6 +98,9 @@ const App: React.FC = () => (
               
               {/* Report Routes */}
               <Route exact path="/report" component={ReportIncident} />
+              
+              {/* Checkout Routes */}
+              <Route exact path="/checkout/payment" component={Payment} />
               
               {/* Auth Routes */}
               <Route exact path="/login" component={Login} />
