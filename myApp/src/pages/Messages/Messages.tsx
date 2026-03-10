@@ -1,5 +1,5 @@
 // src/pages/Messages/Messages.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   IonPage,
   IonContent,
@@ -9,44 +9,69 @@ import {
   IonIcon,
   IonBadge,
   IonButton,
-  IonInput,
-  IonItem,
-  IonLabel,
-  IonModal,
-  IonBackButton,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonTextarea,
   IonSpinner,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonBackButton,
+  IonTitle,
 } from '@ionic/react';
 import {
   chatbubbleOutline,
   sendOutline,
-  personOutline,
   checkmarkDoneOutline,
-  timeOutline,
   checkmarkCircleOutline,
-  lockClosedOutline,
   arrowBack,
+  close,
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader';
 import { useAuth } from '../../context/AuthContext';
-import { Message } from '../../types';
+import './Messages.css';
+
+interface ChatMessage {
+  id: string;
+  content: string;
+  senderRole: 'user' | 'rider' | 'system';
+  timestamp: Date;
+  status: 'sending' | 'sent' | 'seen' | 'failed';
+}
+
+interface Conversation {
+  id: string;
+  orderId: string;
+  otherPerson: {
+    id: string;
+    name: string;
+    role: 'rider';
+    image: string;
+  };
+  stallName: string;
+  lastMessage: string;
+  unreadCount: number;
+  timestamp: Date;
+  status: 'active' | 'completed' | 'cancelled';
+  orderStatus: 'delivering' | 'delivered';
+  canStartDeal: boolean;
+}
 
 const Messages: React.FC = () => {
   const history = useHistory();
   const { user, logout } = useAuth();
+
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedConversation, setSelectedConversation] = useState<any | null>(null);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [showChat, setShowChat] = useState(false);
   const [newMessage, setNewMessage] = useState('');
   const [completedMessages, setCompletedMessages] = useState<string[]>([]);
+  const [chatMessages, setChatMessages] = useState<Record<string, ChatMessage[]>>({});
 
-  // Mock conversations - in production, fetch from backend
-  // Only show conversations where rider has ACCEPTED the order
-  const conversations = [
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLIonTextareaElement>(null);
+
+  // Mock data
+  const conversations: Conversation[] = [
     {
       id: 'conv1',
       orderId: '#1001',
@@ -54,10 +79,10 @@ const Messages: React.FC = () => {
       stallName: 'Burger King',
       lastMessage: 'I am on my way with your order!',
       unreadCount: 2,
-      timestamp: new Date(Date.now() - 10 * 60 * 1000), // 10 mins ago
-      status: 'active', // accepted, active, completed
+      timestamp: new Date(Date.now() - 10 * 60 * 1000),
+      status: 'active',
       orderStatus: 'delivering',
-      canStartDeal: false, // Only true when order is done
+      canStartDeal: false,
     },
     {
       id: 'conv2',
@@ -66,67 +91,54 @@ const Messages: React.FC = () => {
       stallName: 'Sushi Master',
       lastMessage: 'Order has been delivered! Enjoy your meal',
       unreadCount: 0,
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      status: 'active', // accepted, active, order ready for deal
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      status: 'active',
       orderStatus: 'delivered',
-      canStartDeal: true, // Can complete the deal now
+      canStartDeal: true,
     },
   ];
 
-  // Auto-hide completed messages after 1 minute
+  useEffect(() => {
+    if (Object.keys(chatMessages).length > 0) return;
+
+    setChatMessages({
+      conv1: [
+        { id: 'm1', content: 'Hi, I have received your order', senderRole: 'rider', timestamp: new Date(Date.now() - 30 * 60 * 1000), status: 'seen' },
+        { id: 'm2', content: 'Great! How long will it take?', senderRole: 'user', timestamp: new Date(Date.now() - 25 * 60 * 1000), status: 'seen' },
+        { id: 'm3', content: 'I am on my way with your order!', senderRole: 'rider', timestamp: new Date(Date.now() - 10 * 60 * 1000), status: 'sent' },
+      ],
+      conv2: [
+        { id: 'm1', content: 'Your order is ready!', senderRole: 'rider', timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), status: 'seen' },
+        { id: 'm2', content: 'Thank you!', senderRole: 'user', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), status: 'seen' },
+        { id: 'm3', content: 'Order has been delivered! Enjoy your meal', senderRole: 'rider', timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), status: 'seen' },
+      ],
+    });
+  }, []);
+
   useEffect(() => {
     if (completedMessages.length === 0) return;
-
-    const timer = setTimeout(() => {
-      setCompletedMessages([]);
-    }, 60000); // 1 minute
-
+    const timer = setTimeout(() => setCompletedMessages([]), 60000);
     return () => clearTimeout(timer);
   }, [completedMessages]);
 
-  // Mock messages for selected conversation
-  const getMessages = () => {
-    const baseMessages = [
-      {
-        id: 'msg1',
-        content: 'Hi, I have received your order',
-        senderRole: 'rider',
-        timestamp: new Date(Date.now() - 30 * 60 * 1000),
-        isRead: true,
-        status: 'sent',
-      },
-      {
-        id: 'msg2',
-        content: 'Great! How long will it take?',
-        senderRole: 'user',
-        timestamp: new Date(Date.now() - 25 * 60 * 1000),
-        isRead: true,
-        status: 'sent',
-      },
-      {
-        id: 'msg3',
-        content: 'I am on my way with your order!',
-        senderRole: 'rider',
-        timestamp: new Date(Date.now() - 10 * 60 * 1000),
-        isRead: false,
-        status: 'sent',
-      },
-    ];
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages, selectedConversation]);
 
-    // Add completed message if deal was just completed
-    if (completedMessages.includes(selectedConversation?.id)) {
-      baseMessages.push({
-        id: 'msg_completed',
-        content: '✓ Deal Completed! This conversation will close in 1 minute.',
-        senderRole: 'system',
-        timestamp: new Date(),
-        isRead: true,
-        status: 'completed',
-      });
-    }
+  useEffect(() => {
+    const textarea = textareaRef.current?.querySelector('textarea');
+    if (!textarea) return;
 
-    return baseMessages;
-  };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey && newMessage.trim()) {
+        e.preventDefault();
+        handleSendMessage();
+      }
+    };
+
+    textarea.addEventListener('keydown', handleKeyDown);
+    return () => textarea.removeEventListener('keydown', handleKeyDown);
+  }, [newMessage, selectedConversation]);
 
   const filteredConversations = conversations.filter(conv =>
     conv.otherPerson.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -135,10 +147,10 @@ const Messages: React.FC = () => {
   );
 
   const formatTime = (date: Date) => {
-    const now = new Date();
-    const diffMins = Math.floor((now.getTime() - date.getTime()) / 60000);
-    const diffHours = Math.floor((now.getTime() - date.getTime()) / 3600000);
-    const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
+    const diffMs = Date.now() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
 
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins}m ago`;
@@ -147,156 +159,135 @@ const Messages: React.FC = () => {
     return date.toLocaleDateString();
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return '#10B981';
-      case 'completed':
-        return '#6366F1';
-      case 'cancelled':
-        return '#EF4444';
-      default:
-        return '#9CA3AF';
-    }
-  };
-
   const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // In production, send to backend
-      setNewMessage('');
-    }
+    if (!newMessage.trim() || !selectedConversation) return;
+
+    const messageId = `msg_${Date.now()}`;
+    const userMsg: ChatMessage = {
+      id: messageId,
+      content: newMessage,
+      senderRole: 'user',
+      timestamp: new Date(),
+      status: 'sending',
+    };
+
+    setChatMessages(prev => ({
+      ...prev,
+      [selectedConversation.id]: [...(prev[selectedConversation.id] || []), userMsg],
+    }));
+
+    setNewMessage('');
+
+    setTimeout(() => {
+      setChatMessages(prev => ({
+        ...prev,
+        [selectedConversation.id]: prev[selectedConversation.id].map(m =>
+          m.id === messageId ? { ...m, status: 'sent' } : m
+        ),
+      }));
+    }, 600);
+
+    setTimeout(() => {
+      setChatMessages(prev => ({
+        ...prev,
+        [selectedConversation.id]: prev[selectedConversation.id].map(m =>
+          m.id === messageId ? { ...m, status: 'seen' } : m
+        ),
+      }));
+    }, 1800);
+
+    setTimeout(() => {
+      const replies = ['Got it!', 'On my way!', 'Perfect, thanks!', 'Coming right up!'];
+      const reply: ChatMessage = {
+        id: `reply_${Date.now()}`,
+        content: replies[Math.floor(Math.random() * replies.length)],
+        senderRole: 'rider',
+        timestamp: new Date(),
+        status: 'seen',
+      };
+      setChatMessages(prev => ({
+        ...prev,
+        [selectedConversation.id]: [...(prev[selectedConversation.id] || []), reply],
+      }));
+    }, 2400 + Math.random() * 1800);
   };
 
   const handleCompleteDeal = () => {
-    if (selectedConversation) {
-      // Mark conversation as completed
-      setCompletedMessages([...completedMessages, selectedConversation.id]);
-      
-      // Auto-close chat after 1 minute
-      setTimeout(() => {
-        setShowChat(false);
-        setCompletedMessages(prev => prev.filter(id => id !== selectedConversation.id));
-      }, 60000);
-    }
+    if (!selectedConversation) return;
+    setCompletedMessages(prev => [...prev, selectedConversation.id]);
+
+    setTimeout(() => {
+      setShowChat(false);
+      setCompletedMessages(prev => prev.filter(id => id !== selectedConversation.id));
+    }, 60000);
   };
 
   return (
     <IonPage>
       <PageHeader
-        showLogo={true}
+        showLogo
         onProfileClick={() => {
           logout();
           history.push('/login');
         }}
       />
 
-      <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
-        {/* Header with Back Button */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', borderBottom: '1px solid var(--ion-border-color)' }}>
-          <IonButton 
-            fill="clear" 
-            onClick={() => history.goBack()}
-            style={{ '--color': '#6366F1', margin: '0 0 0 -8px' } as any}
-          >
+      <IonContent>
+        <div className="messages-header">
+          <IonButton fill="clear" onClick={() => history.goBack()}>
             <IonIcon icon={arrowBack} />
           </IonButton>
-          <h2 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: 'var(--ion-text-color)', flex: 1 }}>
-            Messages
-          </h2>
-          <div style={{ width: '44px' }}></div>
+          <h2>Messages</h2>
+          <div style={{ width: 44 }} />
         </div>
 
-        {/* Search Bar */}
-        <div style={{ padding: '16px' }}>
+        <div className="search-container">
           <IonSearchbar
             value={searchQuery}
-            onIonChange={e => setSearchQuery(e.detail.value!)}
+            onIonInput={(e) => setSearchQuery(e.detail.value ?? '')}
             placeholder="Search conversations..."
-            style={{
-              '--background': 'var(--ion-card-background)',
-              '--border-radius': '12px',
-              '--border': '1px solid var(--ion-border-color)',
-              '--placeholder-color': 'var(--ion-text-color-secondary)',
-              '--icon-color': 'var(--ion-color-primary)',
-              '--color': 'var(--ion-text-color)',
-              padding: '0',
-              height: '48px',
-            } as any}
+            mode="ios"
           />
         </div>
 
-        {/* Conversations List */}
-        <div style={{ padding: '0 16px 16px' }}>
+        <div className="conversations-list">
           {filteredConversations.length === 0 ? (
-            <IonCard style={{ margin: 0, background: 'var(--ion-card-background)', textAlign: 'center', padding: '40px 20px' }}>
-              <p style={{ color: 'var(--ion-text-color-secondary)', margin: 0 }}>No conversations found</p>
+            <IonCard className="empty-card">
+              <p>No conversations found</p>
             </IonCard>
           ) : (
             filteredConversations.map(conv => (
               <IonCard
                 key={conv.id}
-                style={{ margin: '0 0 12px', background: 'var(--ion-card-background)', cursor: 'pointer' }}
+                className="conversation-card"
                 onClick={() => {
                   setSelectedConversation(conv);
                   setShowChat(true);
                 }}
               >
-                <IonCardContent style={{ padding: '12px 16px' }}>
-                  <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                    {/* Avatar */}
-                    <div style={{
-                      width: '44px',
-                      height: '44px',
-                      background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '20px',
-                      flexShrink: 0
-                    }}>
-                      {conv.otherPerson.image}
-                    </div>
+                <IonCardContent>
+                  <div className="conversation-row">
+                    <div className="avatar">{conv.otherPerson.image}</div>
 
-                    {/* Content */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                        <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--ion-text-color)' }}>
-                          {conv.otherPerson.name}
-                        </h3>
-                        <IonBadge style={{ '--background': getStatusColor(conv.status), fontSize: '9px' }}>
-                          {conv.status}
-                        </IonBadge>
-                        {conv.unreadCount > 0 && (
-                          <IonBadge style={{ '--background': '#6366F1', fontSize: '9px' }}>
-                            {conv.unreadCount}
-                          </IonBadge>
-                        )}
+                    <div className="conversation-info">
+                      <div className="name-row">
+                        <h3>{conv.otherPerson.name}</h3>
+                        <div className="badges">
+                          <IonBadge color={conv.status}>{conv.status}</IonBadge>
+                          {conv.unreadCount > 0 && (
+                            <IonBadge color="primary">{conv.unreadCount}</IonBadge>
+                          )}
+                        </div>
                       </div>
 
-                      <p style={{ margin: '2px 0', fontSize: '11px', color: 'var(--ion-text-color-secondary)' }}>
+                      <p className="subtitle">
                         {conv.stallName} • {conv.orderId}
                       </p>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
-                        <p style={{
-                          margin: 0,
-                          fontSize: '12px',
-                          color: 'var(--ion-text-color)',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          flex: 1
-                        }}>
-                          {conv.lastMessage}
-                        </p>
-                      </div>
+                      <p className="last-message">{conv.lastMessage}</p>
                     </div>
 
-                    {/* Time */}
-                    <div style={{ textAlign: 'right', fontSize: '11px', color: 'var(--ion-text-color-secondary)', flexShrink: 0 }}>
-                      {formatTime(conv.timestamp)}
-                    </div>
+                    <div className="timestamp">{formatTime(conv.timestamp)}</div>
                   </div>
                 </IonCardContent>
               </IonCard>
@@ -307,171 +298,118 @@ const Messages: React.FC = () => {
 
       {/* Chat Modal */}
       <IonModal isOpen={showChat} onDidDismiss={() => setShowChat(false)}>
-        <IonHeader>
-          <IonToolbar style={{ '--background': 'var(--ion-card-background)' }}>
+        <IonHeader translucent>
+          <IonToolbar>
             <IonButton slot="start" fill="clear" onClick={() => setShowChat(false)}>
-              <IonBackButton />
+              <IonIcon icon={close} slot="icon-only" />
             </IonButton>
-            <div style={{ flex: 1 }}>
-              <IonTitle style={{ fontSize: '14px' }}>
-                {selectedConversation?.otherPerson.name}
-              </IonTitle>
-              <p style={{ margin: '0 0 0 16px', fontSize: '11px', color: 'var(--ion-text-color-secondary)' }}>
-                {selectedConversation?.stallName} • {selectedConversation?.orderId}
-              </p>
-            </div>
+            <IonTitle>
+              <div className="chat-header-title">
+                <div>{selectedConversation?.otherPerson.name}</div>
+                <div className="chat-subtitle">
+                  {selectedConversation?.stallName} • {selectedConversation?.orderId}
+                </div>
+              </div>
+            </IonTitle>
           </IonToolbar>
+
           {selectedConversation && (
-            <IonToolbar style={{ '--background': 'var(--ion-background-color)', '--border-bottom': '1px solid var(--ion-border-color)', paddingTop: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', width: '100%' }}>
-                <span style={{ fontSize: '11px', color: 'var(--ion-text-color-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Order Status:</span>
-                <IonBadge style={{
-                  '--background': selectedConversation.orderStatus === 'delivering' ? '#F59E0B' : '#10B981',
-                  fontSize: '10px'
-                }}>
-                  {selectedConversation.orderStatus.charAt(0).toUpperCase() + selectedConversation.orderStatus.slice(1)}
+            <IonToolbar className="order-status-bar">
+              <div className="status-row">
+                <span>Order Status:</span>
+                <IonBadge
+                  color={selectedConversation.orderStatus === 'delivering' ? 'warning' : 'success'}
+                >
+                  {selectedConversation.orderStatus}
                 </IonBadge>
               </div>
             </IonToolbar>
           )}
         </IonHeader>
 
-        <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
-          {selectedConversation && (
-            <>
-              {/* Messages */}
-              <div style={{ padding: '16px' }}>
-                {getMessages().map(msg => (
-                  <div
-                    key={msg.id}
-                    style={{
-                      display: 'flex',
-                      justifyContent: msg.senderRole === 'user' ? 'flex-end' : 'flex-start',
-                      marginBottom: '12px'
-                    }}
-                  >
-                    <div
-                      style={{
-                        maxWidth: '70%',
-                        padding: '12px 14px',
-                        borderRadius: '12px',
-                        background: msg.senderRole === 'user'
-                          ? '#6366F1'
-                          : 'var(--ion-card-background)',
-                        color: msg.senderRole === 'user' ? 'white' : 'var(--ion-text-color)',
-                        fontSize: '13px',
-                        lineHeight: '1.4'
-                      }}
-                    >
-                      <p style={{ margin: '0 0 4px', wordBreak: 'break-word' }}>
-                        {msg.content}
-                      </p>
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        fontSize: '10px',
-                        opacity: 0.7,
-                        justifyContent: 'flex-end'
-                      }}>
-                        <span>{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        {msg.senderRole === 'user' && msg.isRead && (
-                          <IonIcon icon={checkmarkDoneOutline} style={{ fontSize: '12px' }} />
+        <IonContent className="chat-content" fullscreen>
+          <div className="messages-container">
+            {(chatMessages[selectedConversation?.id ?? ''] || []).map(msg => (
+              <div
+                key={msg.id}
+                className={`message-row ${msg.senderRole === 'user' ? 'sent' : 'received'}`}
+              >
+                {msg.senderRole === 'rider' && (
+                  <div className="small-avatar">{selectedConversation?.otherPerson.image}</div>
+                )}
+
+                <div className="message-bubble">
+                  <p>{msg.content}</p>
+                  <div className="message-meta">
+                    {new Date(msg.timestamp).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                    {msg.senderRole === 'user' && (
+                      <>
+                        {msg.status === 'sending' && <IonSpinner name="dots" />}
+                        {msg.status === 'sent' && <IonIcon icon={checkmarkDoneOutline} />}
+                        {msg.status === 'seen' && (
+                          <IonIcon icon={checkmarkDoneOutline} color="primary" />
                         )}
-                      </div>
-                    </div>
+                      </>
+                    )}
                   </div>
-                ))}
+                </div>
               </div>
-
-              {/* Message Input & Deal Completion */}
-              <div style={{
-                position: 'sticky',
-                bottom: 0,
-                padding: '12px 16px',
-                background: 'var(--ion-card-background)',
-                borderTop: '1px solid var(--ion-border-color)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px'
-              }}>
-                {/* Deal Completion Button (only show if order is delivered and not completed yet) */}
-                {selectedConversation?.canStartDeal && !completedMessages.includes(selectedConversation?.id) && (
-                  <IonButton
-                    expand="block"
-                    style={{
-                      '--background': '#10B981',
-                      '--color': 'white',
-                      margin: 0,
-                      fontSize: '13px',
-                      height: '44px'
-                    }}
-                    onClick={handleCompleteDeal}
-                  >
-                    <IonIcon icon={checkmarkCircleOutline} slot="start" />
-                    Complete Deal
-                  </IonButton>
-                )}
-
-                {/* Deal Completed Status */}
-                {completedMessages.includes(selectedConversation?.id) && (
-                  <div style={{
-                    padding: '12px',
-                    background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    color: 'white',
-                    fontSize: '12px',
-                    fontWeight: 600
-                  }}>
-                    <IonIcon icon={checkmarkCircleOutline} style={{ fontSize: '16px' }} />
-                    <div>
-                      <p style={{ margin: 0 }}>Deal Completed!</p>
-                      <p style={{ margin: 0, fontSize: '11px', opacity: 0.9 }}>This chat will close in 1 minute</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Message Input (only show if not completed) */}
-                {!completedMessages.includes(selectedConversation?.id) && (
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    <IonTextarea
-                      value={newMessage}
-                      onIonChange={e => setNewMessage(e.detail.value!)}
-                      placeholder="Type your message..."
-                      style={{
-                        '--background': 'var(--ion-background-color)',
-                        '--border-radius': '8px',
-                        '--padding-start': '12px',
-                        '--padding-end': '12px',
-                        '--padding-top': '10px',
-                        '--padding-bottom': '10px',
-                        fontSize: '13px',
-                      } as any}
-                      rows={1}
-                      autoGrow
-                    />
-                    <IonButton
-                      fill="solid"
-                      style={{
-                        '--background': '#6366F1',
-                        '--color': 'white',
-                        width: '44px',
-                        height: '44px',
-                        margin: 0
-                      }}
-                      onClick={handleSendMessage}
-                    >
-                      <IonIcon icon={sendOutline} />
-                    </IonButton>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         </IonContent>
+
+        {/* Footer — placed outside IonContent so it stays fixed at bottom */}
+        <div className="chat-footer-wrapper">
+          <div className="chat-footer">
+            {selectedConversation?.canStartDeal &&
+              !completedMessages.includes(selectedConversation.id) && (
+                <IonButton
+                  expand="block"
+                  color="success"
+                  onClick={handleCompleteDeal}
+                  className="complete-deal-btn"
+                >
+                  <IonIcon icon={checkmarkCircleOutline} slot="start" />
+                  Complete Deal
+                </IonButton>
+              )}
+
+            {completedMessages.includes(selectedConversation?.id ?? '') && (
+              <div className="deal-completed-banner">
+                <IonIcon icon={checkmarkCircleOutline} />
+                <div>
+                  <strong>Deal Completed! 🎉</strong>
+                  <div>Chat closing in 1 minute...</div>
+                </div>
+              </div>
+            )}
+
+            {!completedMessages.includes(selectedConversation?.id ?? '') && (
+              <div className="input-row">
+                <IonTextarea
+                  ref={textareaRef}
+                  value={newMessage}
+                  onIonInput={(e) => setNewMessage(e.detail.value ?? '')}
+                  placeholder="Type a message... (Enter to send)"
+                  autoGrow
+                  rows={1}
+                  className="message-input"
+                />
+                <IonButton
+                  disabled={!newMessage.trim()}
+                  onClick={handleSendMessage}
+                  className="send-btn"
+                >
+                  <IonIcon icon={sendOutline} slot="icon-only" />
+                </IonButton>
+              </div>
+            )}
+          </div>
+        </div>
       </IonModal>
     </IonPage>
   );

@@ -29,6 +29,7 @@ const MOCK_STALLS: Stall[] = [
     deliveryFee: 2.99,
     minOrder: 10,
     cuisine: 'Fast Food',
+    location: '123 Main St, Downtown',
     menu: []
   },
   {
@@ -40,6 +41,7 @@ const MOCK_STALLS: Stall[] = [
     deliveryFee: 3.99,
     minOrder: 20,
     cuisine: 'Japanese',
+    location: '456 Oak Ave, Midtown',
     menu: []
   },
   {
@@ -51,6 +53,7 @@ const MOCK_STALLS: Stall[] = [
     deliveryFee: 2.49,
     minOrder: 15,
     cuisine: 'Italian',
+    location: '789 Pine Rd, Uptown',
     menu: []
   }
 ];

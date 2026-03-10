@@ -24,6 +24,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: 'John Doe',
       email,
       phone: '+1234567890',
+      role: 'user',
       token: 'mock-token'
     };
     setUser(mockUser);
@@ -37,7 +38,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       name: userData.name || '',
       email: userData.email || '',
       phone: userData.phone || '',
-      token: 'mock-token'
+      role: userData.role || 'user',
+      token: 'mock-token',
+      verificationStatus: userData.role === 'rider' ? 'pending' : undefined,
+      vehicle: userData.vehicle,
+      licensePlate: userData.licensePlate,
+      licenseNumber: userData.licenseNumber,
+      bankAccount: userData.bankAccount,
+      bankName: userData.bankName,
     };
     setUser(mockUser);
     setIsGuest(false);

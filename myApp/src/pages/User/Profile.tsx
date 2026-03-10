@@ -24,7 +24,7 @@ const UserProfile: React.FC = () => {
   const [profile, setProfile] = useState({
     name: 'John Doe',
     email: 'john@example.com',
-    phone: '+1 (555) 123-4567'
+    phone: '+63 912 123 4567'
   });
 
   const handleLogout = () => {
@@ -223,6 +223,7 @@ const UserProfile: React.FC = () => {
               fontWeight: 600,
               marginBottom: '12px'
             }}
+            onClick={() => history.push('/user/settings')}
           >
             <IonIcon icon={settingsOutline} slot="start" />
             Settings

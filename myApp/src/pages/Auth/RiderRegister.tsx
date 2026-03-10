@@ -17,7 +17,7 @@ import {
   IonLabel,
   IonFooter,
 } from '@ionic/react';
-import { personOutline, mailOutline, lockClosedOutline, callOutline, eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { personOutline, mailOutline, lockClosedOutline, callOutline, eyeOutline, eyeOffOutline, carOutline, documentOutline, businessOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -31,7 +31,12 @@ const RiderRegister: React.FC = () => {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    vehicle: '',
+    licensePlate: '',
+    licenseNumber: '',
+    bankAccount: '',
+    bankName: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -41,6 +46,14 @@ const RiderRegister: React.FC = () => {
   const handleRegister = async () => {
     if (!formData.name || !formData.email || !formData.password) {
       setError('Please fill in all required fields');
+      return;
+    }
+    if (!formData.vehicle || !formData.licensePlate || !formData.licenseNumber) {
+      setError('Please fill in all vehicle and license information');
+      return;
+    }
+    if (!formData.bankAccount || !formData.bankName) {
+      setError('Please fill in all bank information');
       return;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -57,9 +70,16 @@ const RiderRegister: React.FC = () => {
       await register({
         name: formData.name,
         email: formData.email,
-        phone: formData.phone
+        phone: formData.phone,
+        vehicle: formData.vehicle,
+        licensePlate: formData.licensePlate,
+        licenseNumber: formData.licenseNumber,
+        bankAccount: formData.bankAccount,
+        bankName: formData.bankName,
+        role: 'rider'
       });
-      history.push('/rider/home');
+      // Show pending verification message
+      history.push('/rider/pending-approval');
     } catch (err) {
       setError('Registration failed');
     } finally {
@@ -143,9 +163,74 @@ const RiderRegister: React.FC = () => {
               <IonIcon icon={callOutline} slot="start" color="primary" />
               <IonInput
                 type="tel"
-                placeholder="+1 (555) 000-0000"
+                placeholder="+63 912 345 6789"
                 value={formData.phone}
                 onIonChange={e => setFormData({...formData, phone: e.detail.value!})}
+                style={{ '--color': 'var(--ion-text-color)' } as any}
+              />
+            </IonItem>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>Vehicle</label>
+            <IonItem className="rider-input" style={{ marginBottom: '0', '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
+              <IonIcon icon={carOutline} slot="start" color="primary" />
+              <IonInput
+                placeholder="e.g., Honda CB500F"
+                value={formData.vehicle}
+                onIonChange={e => setFormData({...formData, vehicle: e.detail.value!})}
+                style={{ '--color': 'var(--ion-text-color)' } as any}
+              />
+            </IonItem>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>License Plate</label>
+            <IonItem className="rider-input" style={{ marginBottom: '0', '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
+              <IonIcon icon={documentOutline} slot="start" color="primary" />
+              <IonInput
+                placeholder="e.g., ABC-1234"
+                value={formData.licensePlate}
+                onIonChange={e => setFormData({...formData, licensePlate: e.detail.value!})}
+                style={{ '--color': 'var(--ion-text-color)' } as any}
+              />
+            </IonItem>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>License Number</label>
+            <IonItem className="rider-input" style={{ marginBottom: '0', '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
+              <IonIcon icon={documentOutline} slot="start" color="primary" />
+              <IonInput
+                placeholder="Your license number"
+                value={formData.licenseNumber}
+                onIonChange={e => setFormData({...formData, licenseNumber: e.detail.value!})}
+                style={{ '--color': 'var(--ion-text-color)' } as any}
+              />
+            </IonItem>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>Bank Name</label>
+            <IonItem className="rider-input" style={{ marginBottom: '0', '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
+              <IonIcon icon={businessOutline} slot="start" color="primary" />
+              <IonInput
+                placeholder="e.g., Philippine National Bank"
+                value={formData.bankName}
+                onIonChange={e => setFormData({...formData, bankName: e.detail.value!})}
+                style={{ '--color': 'var(--ion-text-color)' } as any}
+              />
+            </IonItem>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>Bank Account Number</label>
+            <IonItem className="rider-input" style={{ marginBottom: '0', '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
+              <IonIcon icon={businessOutline} slot="start" color="primary" />
+              <IonInput
+                placeholder="Your account number"
+                value={formData.bankAccount}
+                onIonChange={e => setFormData({...formData, bankAccount: e.detail.value!})}
                 style={{ '--color': 'var(--ion-text-color)' } as any}
               />
             </IonItem>

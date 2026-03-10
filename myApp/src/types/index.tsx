@@ -8,6 +8,7 @@ export interface Stall {
   deliveryFee: number;
   minOrder: number;
   cuisine: string;
+  location: string;
   menu: MenuItem[];
 }
 
@@ -33,6 +34,12 @@ export interface User {
   phone: string;
   role: 'guest' | 'user' | 'rider' | 'admin';
   token?: string;
+  verificationStatus?: 'pending' | 'approved' | 'rejected';
+  vehicle?: string;
+  licensePlate?: string;
+  licenseNumber?: string;
+  bankAccount?: string;
+  bankName?: string;
 }
 
 export interface Rider {

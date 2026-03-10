@@ -23,7 +23,7 @@ import { useTheme } from '../../context/ThemeContext';
 
 const RiderLogin: React.FC = () => {
   const history = useHistory();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { isDarkMode } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,6 +40,18 @@ const RiderLogin: React.FC = () => {
     setLoading(true);
     try {
       await login(email, password);
+      // Check verification status
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        if (userData.verificationStatus === 'pending') {
+          setError('{pending}');
+          setTimeout(() => {
+            history.push('/rider/pending-approval');
+          }, 1000);
+          return;
+        }
+      }
       history.push('/rider/home');
     } catch (err) {
       setError('Invalid credentials');

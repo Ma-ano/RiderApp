@@ -16,7 +16,7 @@ import {
   IonSegmentButton,
   IonLabel,
 } from '@ionic/react';
-import { arrowBack, cartOutline, add, star, timeOutline, bicycle, checkmarkCircle, flame } from 'ionicons/icons';
+import { arrowBack, cartOutline, add, star, timeOutline, bicycle, checkmarkCircle, flame, locationOutline } from 'ionicons/icons';
 import { useParams, useHistory } from 'react-router-dom';
 import MenuItem from '../../components/Stall/MenuItem';
 import PageHeader from '../../components/PageHeader';
@@ -37,6 +37,7 @@ const STALL_INFO: Record<string, any> = {
     deliveryFee: 2.99,
     image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600',
     status: 'Open',
+    location: '123 Main St, Downtown',
   },
   '2': {
     name: 'Sushi Master',
@@ -46,6 +47,7 @@ const STALL_INFO: Record<string, any> = {
     deliveryFee: 3.99,
     image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600',
     status: 'Open',
+    location: '456 Oak Ave, Midtown',
   },
   '3': {
     name: 'Pizza Palace',
@@ -55,6 +57,7 @@ const STALL_INFO: Record<string, any> = {
     deliveryFee: 2.49,
     image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=600',
     status: 'Open',
+    location: '789 Pine Rd, Uptown',
   }
 };
 
@@ -281,6 +284,12 @@ const StallDetail: React.FC = () => {
             <IonIcon icon={checkmarkCircle} style={{ marginRight: '4px' }} />
             {stallInfo.status}
           </IonBadge>
+
+          {/* Location */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--ion-text-color-secondary)', fontSize: '14px', marginBottom: '16px' }}>
+            <IonIcon icon={locationOutline} style={{ fontSize: '16px' }} />
+            {stallInfo.location}
+          </div>
 
           {/* Stall Stats Card - Responsive Grid */}
           <div className="stall-stats-container">

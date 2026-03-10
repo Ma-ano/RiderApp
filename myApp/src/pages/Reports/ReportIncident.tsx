@@ -140,7 +140,7 @@ const ReportIncident: React.FC = () => {
         <div style={{ padding: '0 16px 16px' }}>
           {/* Report Type Selection */}
           <div style={{ marginBottom: '16px' }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: 'var(--ion-text-color)' }}>
+            <h3 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: 'var(--ion-text-color)', lineHeight: '1.4' }}>
               Report Type
             </h3>
             <div style={{
@@ -178,7 +178,7 @@ const ReportIncident: React.FC = () => {
 
           {/* Priority Selection */}
           <div style={{ marginBottom: '16px' }}>
-            <h3 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: 'var(--ion-text-color)' }}>
+            <h3 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: 600, color: 'var(--ion-text-color)', lineHeight: '1.4' }}>
               Priority Level
             </h3>
             <div style={{
@@ -220,7 +220,7 @@ const ReportIncident: React.FC = () => {
           {/* Order ID (Optional) */}
           <div style={{ marginBottom: '16px' }}>
             <IonItem lines="none" style={{ '--background': 'var(--ion-card-background)', marginBottom: '8px' } as any}>
-              <IonLabel position="floating" style={{ color: 'var(--ion-text-color-secondary)' }}>
+              <IonLabel position="floating" style={{ color: 'var(--ion-text-color-secondary)', lineHeight: '1.4' }}>
                 Related Order ID (Optional)
               </IonLabel>
               <IonInput
@@ -235,7 +235,7 @@ const ReportIncident: React.FC = () => {
           {/* Title */}
           <div style={{ marginBottom: '16px' }}>
             <IonItem lines="none" style={{ '--background': 'var(--ion-card-background)', marginBottom: '8px' } as any}>
-              <IonLabel position="floating" style={{ color: 'var(--ion-text-color-secondary)', fontSize: '13px' }}>
+              <IonLabel position="floating" style={{ color: 'var(--ion-text-color-secondary)', fontSize: '13px', lineHeight: '1.4' }}>
                 Report Title
               </IonLabel>
               <IonInput
@@ -249,7 +249,8 @@ const ReportIncident: React.FC = () => {
             <p style={{
               margin: '4px 12px 0',
               fontSize: '11px',
-              color: 'var(--ion-text-color-secondary)'
+              color: 'var(--ion-text-color-secondary)',
+              lineHeight: '1.4'
             }}>
               {title.length}/100 characters
             </p>
@@ -258,7 +259,7 @@ const ReportIncident: React.FC = () => {
           {/* Description */}
           <div style={{ marginBottom: '16px' }}>
             <IonItem lines="none" style={{ '--background': 'var(--ion-card-background)', marginBottom: '8px', alignItems: 'flex-start' } as any}>
-              <IonLabel position="floating" style={{ color: 'var(--ion-text-color-secondary)', marginTop: '8px', fontSize: '13px' }}>
+              <IonLabel position="floating" style={{ color: 'var(--ion-text-color-secondary)', marginTop: '8px', fontSize: '13px', lineHeight: '1.4' }}>
                 Detailed Description
               </IonLabel>
               <IonTextarea
@@ -271,13 +272,15 @@ const ReportIncident: React.FC = () => {
                   color: 'var(--ion-text-color)',
                   '--padding-start': '12px',
                   '--padding-end': '12px',
+                  lineHeight: '1.5'
                 } as any}
               />
             </IonItem>
             <p style={{
               margin: '4px 12px 0',
               fontSize: '11px',
-              color: 'var(--ion-text-color-secondary)'
+              color: 'var(--ion-text-color-secondary)',
+              lineHeight: '1.4'
             }}>
               {description.length}/500 characters
             </p>
