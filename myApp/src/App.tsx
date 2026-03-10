@@ -34,12 +34,14 @@ import AdminLogin from './pages/Auth/AdminLogin';
 import AdminRegister from './pages/Auth/AdminRegister';
 import UserHome from './pages/User/Home';
 import UserProfile from './pages/User/Profile';
+import UserSettings from './pages/User/Settings';
 import UserCart from './pages/User/Cart';
 import UserLocationPicker from './pages/User/LocationPicker';
 import RiderHome from './pages/Rider/Home';
 import RiderOrders from './pages/Rider/Orders';
 import RiderEarnings from './pages/Rider/Earnings';
 import RiderProfile from './pages/Rider/Profile';
+import RiderPendingApproval from './pages/Rider/PendingApproval';
 import AdminDashboard from './pages/Admin/Dashboard';
 import AdminUsers from './pages/Admin/Users';
 import AdminRiders from './pages/Admin/Riders';
@@ -72,6 +74,7 @@ const App: React.FC = () => (
               {/* User Routes */}
               <Route exact path="/user/home" component={UserHome} />
               <Route exact path="/user/profile" component={UserProfile} />
+              <Route exact path="/user/settings" component={UserSettings} />
               <Route exact path="/user/cart" component={UserCart} />
               <Route exact path="/user/location" component={UserLocationPicker} />
               
@@ -81,6 +84,7 @@ const App: React.FC = () => (
               <Route exact path="/rider/earnings" component={RiderEarnings} />
               <Route exact path="/rider/profile" component={RiderProfile} />
               <Route exact path="/rider/login" component={RiderLogin} />
+              <Route exact path="/rider/pending-approval" component={RiderPendingApproval} />
               <Route exact path="/rider/register" component={RiderRegister} />
               
               {/* Admin Routes */}

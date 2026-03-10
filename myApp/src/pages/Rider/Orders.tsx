@@ -27,6 +27,7 @@ const RiderOrders: React.FC = () => {
       id: '1',
       stallName: 'Burger King',
       customerName: 'John Doe',
+      customerNumber: '09123456789',
       status: 'picking_up',
       distance: '2.3 km',
       fee: 45,
@@ -37,6 +38,7 @@ const RiderOrders: React.FC = () => {
       id: '2',
       stallName: 'Sushi Master',
       customerName: 'Jane Smith',
+      customerNumber: '09987654321',
       status: 'delivering',
       distance: '1.8 km',
       fee: 38,
@@ -50,6 +52,7 @@ const RiderOrders: React.FC = () => {
       id: '3',
       stallName: 'Pizza Palace',
       customerName: 'Mike Johnson',
+      customerNumber: '09111222333',
       status: 'delivered',
       fee: 52,
       completedAt: '2:30 PM',
@@ -59,6 +62,7 @@ const RiderOrders: React.FC = () => {
       id: '4',
       stallName: 'Chicken Fried Shop',
       customerName: 'Sarah Lee',
+      customerNumber: '09444555666',
       status: 'delivered',
       fee: 40,
       completedAt: '1:15 PM',
@@ -274,21 +278,31 @@ const RiderOrders: React.FC = () => {
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <IonButton 
-                        expand="block"
-                        fill="outline"
-                        style={{ '--border-color': '#6366F1', '--color': '#6366F1', margin: 0 }}
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '12px' }}>
+                      <div 
+                        onClick={() => {
+                          navigator.clipboard.writeText(order.customerNumber);
+                          alert(`Number copied: ${order.customerNumber}`);
+                        }}
+                        style={{
+                          flex: 1,
+                          padding: '12px',
+                          background: 'var(--ion-background-color)',
+                          borderRadius: '8px',
+                          border: '1px solid #6366F1',
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                          transition: 'background-color 0.2s',
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(99, 102, 241, 0.1)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--ion-background-color)')}
                       >
-                        Call
-                      </IonButton>
-                      <IonButton 
-                        expand="block"
-                        style={{ '--background': '#6366F1', margin: 0 }}
-                        onClick={() => history.push(`/rider/tracking/${order.id}`)}
-                      >
-                        Track
-                      </IonButton>
+                        <p style={{ margin: 0, fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>Customer Number</p>
+                        <p style={{ margin: '4px 0 0', fontSize: '14px', color: '#6366F1', fontWeight: 700 }}>
+                          📱 {order.customerNumber}
+                        </p>
+                        <p style={{ margin: '6px 0 0', fontSize: '10px', color: 'var(--ion-text-color-secondary)', fontStyle: 'italic' }}>Click to copy</p>
+                      </div>
                     </div>
                   </IonCardContent>
                 </IonCard>
@@ -311,6 +325,34 @@ const RiderOrders: React.FC = () => {
                       <p style={{ margin: 0, fontSize: '14px', color: 'var(--ion-text-color-secondary)' }}>
                         {order.customerName}
                       </p>
+                      <div
+                        onClick={() => {
+                          navigator.clipboard.writeText(order.customerNumber);
+                          alert(`Number copied: ${order.customerNumber}`);
+                        }}
+                        style={{
+                          margin: '8px 0 0',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <p style={{ 
+                          margin: '0', 
+                          fontSize: '12px', 
+                          color: '#6366F1', 
+                          fontWeight: 600,
+                          textDecoration: 'underline'
+                        }}>
+                          📱 {order.customerNumber}
+                        </p>
+                        <p style={{ 
+                          margin: '2px 0 0', 
+                          fontSize: '10px', 
+                          color: 'var(--ion-text-color-secondary)',
+                          fontStyle: 'italic'
+                        }}>
+                          Click to copy
+                        </p>
+                      </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <IonBadge style={{ '--background': '#10B981', color: 'white', marginRight: '8px' }}>

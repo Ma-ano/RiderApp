@@ -1,7 +1,7 @@
 // src/components/Stall/StallCard.tsx
 import React from 'react';
 import { IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonBadge, IonIcon } from '@ionic/react';
-import { star, timeOutline, bicycleOutline } from 'ionicons/icons';
+import { star, timeOutline, bicycleOutline, locationOutline } from 'ionicons/icons';
 import { Stall } from '../../types';
 
 interface StallCardProps {
@@ -60,6 +60,11 @@ const StallCard: React.FC<StallCardProps> = ({ stall, onClick }) => {
             <IonIcon icon={bicycleOutline} />
             ₱{stall.deliveryFee.toFixed(2)}
           </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#6B7280', fontSize: '13px', marginTop: '8px' }}>
+          <IonIcon icon={locationOutline} style={{ fontSize: '14px' }} />
+          {stall.location}
         </div>
       </IonCardHeader>
     </IonCard>
