@@ -10,6 +10,11 @@ export default defineConfig({
     react(),
     legacy()
   ],
+  server: {
+    fs: {
+      allow: ['..'],
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
