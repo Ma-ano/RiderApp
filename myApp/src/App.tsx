@@ -21,6 +21,7 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import './theme/global.css';
+import "leaflet/dist/leaflet.css";
 
 // Loading fallback component
 const Loading = () => (

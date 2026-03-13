@@ -1,145 +1,206 @@
-// src/pages/Guest/LocationPicker.tsx
-import React, { useState, useEffect } from 'react';
 import {
   IonPage,
   IonContent,
-  IonButton,
-  IonIcon,
-  IonFooter,
   IonHeader,
   IonToolbar,
-  IonButtons,
+  IonTitle,
   IonInput,
-  IonItem,
-} from '@ionic/react';
-import { locationOutline, arrowBack } from 'ionicons/icons';
-import { useHistory } from 'react-router-dom';
+  IonIcon,
+  IonFooter,
+  IonButton
+} from "@ionic/react";
+
+import { locationOutline } from "ionicons/icons";
+import { useState, useRef } from "react";
+
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
+// import GuestLocationPicker from "./LocationPickerBkup";
+
+interface LocationResult {
+  display_name: string;
+  lat: string;
+  lon: string;
+}
+
+// function ChangeMapView({ center }: any) {
+//   const map = useMap();
+//   map.setView(center, 16);
+//   return null;
+// }
+
+function ChangeMapView({ center }: any) {
+  const map = useMap();
+
+  map.setView(center, 16);
+
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 100);
+
+  return null;
+}
 
 const GuestLocationPicker: React.FC = () => {
-  const history = useHistory();
-  const [address, setAddress] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Get user's current location
-    if (navigator.geolocation) {
-      setLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setSelectedLocation({ lat: latitude, lng: longitude });
-          setAddress(`Location: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
-          setLoading(false);
-        },
-        () => {
-          setLoading(false);
-        }
-      );
-    }
-  }, []);
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<LocationResult[]>([]);
+  const [marker, setMarker] = useState<[number, number] | null>(null);
+  const [center, setCenter] = useState<[number, number]>([14.5995,120.9842]);
+
 
   const handleConfirmLocation = () => {
-    if (selectedLocation) {
-      sessionStorage.setItem('selectedLocation', JSON.stringify(selectedLocation));
-      sessionStorage.setItem('locationName', address);
-      history.goBack();
+    console.log("check")
+  };
+
+  
+  // const searchLocation = async (text: string) => {
+
+  //   setQuery(text);
+
+  //   if(text.length < 3){
+  //     setResults([]);
+  //     return;
+  //   }
+
+  //   const res = await fetch(
+  //     `https://nominatim.openstreetmap.org/search?format=json&q=${text}`
+  //   );
+
+  //   const data = await res.json();
+  //   setResults(data);
+  // };
+
+  const debounceRef = useRef<any>(null);
+
+  const searchLocation = (text: string) => {
+    setQuery(text);
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
     }
+
+    debounceRef.current = setTimeout(async () => {
+
+      if (text.length < 3) {
+        setResults([]);
+        return;
+      }
+
+      // const res = await fetch(
+      //   `https://nominatim.openstreetmap.org/search?format=json&q=${text}`
+      // );
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${text}`,
+      {
+        headers: {
+          "User-Agent": "my-ionic-leaflet-app"
+        }
+      }
+    );
+
+      const data = await res.json();
+      setResults(data);
+
+    }, 600);
+  };
+  const chooseLocation = (loc: LocationResult) => {
+
+    const lat = parseFloat(loc.lat);
+    const lon = parseFloat(loc.lon);
+
+    setCenter([lat,lon]);
+    setMarker([lat,lon]);
+    setResults([]);
+    setQuery(loc.display_name);
   };
 
   return (
     <IonPage>
-      <IonHeader className="ion-no-border">
-        <IonToolbar style={{ '--background': 'var(--ion-card-background)' } as any}>
-          <IonButtons slot="start">
-            <IonButton onClick={() => history.goBack()}>
-              <IonIcon slot="icon-only" icon={arrowBack} />
-            </IonButton>
-          </IonButtons>
-          <span style={{ fontSize: '18px', fontWeight: 600 }}>Select Delivery Location</span>
+
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Plan Your Route</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
-        <div style={{ padding: '24px 16px' }}>
-          {/* Map Placeholder */}
-          <div
-            style={{
-              width: '100%',
-              height: '40vh',
-              background: 'var(--ion-card-background)',
-              borderRadius: '12px',
-              border: '1px solid var(--ion-border-color)',
-              marginBottom: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              color: 'var(--ion-text-color-secondary)',
-              gap: '12px',
-            }}
-          >
-            <IonIcon icon={locationOutline} style={{ fontSize: '48px', color: '#6366F1' }} />
-            <p style={{ margin: 0, textAlign: 'center', fontSize: '14px' }}>
-              {loading ? 'Getting your location...' : 'Location acquired'}
-            </p>
+      <IonContent className="ion-padding">
+
+        {/* INPUT */}
+        <div style={{marginBottom:"15px"}}>
+          <label style={{fontSize:"12px",color:"#888"}}>FROM</label>
+
+          <div style={{
+            display:"flex",
+            alignItems:"center",
+            border:"1px solid #ddd",
+            borderRadius:"8px",
+            padding:"8px"
+          }}>
+            <IonIcon icon={locationOutline} style={{marginRight:"8px"}}/>
+
+            <IonInput
+              value={query}
+              placeholder="Enter starting location"
+              onIonInput={(e:any)=>searchLocation(e.target.value)}
+            />
           </div>
 
-          {/* Location Info */}
-          {selectedLocation && (
-            <div
-              style={{
-                background: 'var(--ion-card-background)',
-                padding: '16px',
-                borderRadius: '12px',
-                border: '1px solid var(--ion-border-color)',
-                marginBottom: '24px',
-              }}
-            >
-              <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-                <IonIcon
-                  icon={locationOutline}
-                  style={{ color: '#6366F1', fontSize: '20px', minWidth: '20px' }}
-                />
-                <div>
-                  <p style={{ margin: '0 0 8px', fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>
-                    Selected Location
-                  </p>
-                  <p style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--ion-text-color)' }}>
-                    Latitude: {selectedLocation.lat.toFixed(6)}
-                  </p>
-                  <p style={{ margin: 0, fontWeight: 600, color: 'var(--ion-text-color)' }}>
-                    Longitude: {selectedLocation.lng.toFixed(6)}
-                  </p>
+          {/* AUTOCOMPLETE */}
+          {results.length > 0 && (
+            <div style={{
+              background:"#fff",
+              border:"1px solid #ddd",
+              borderRadius:"8px",
+              marginTop:"4px",
+              maxHeight:"200px",
+              overflow:"auto"
+            }}>
+              {results.map((r,index)=>(
+                <div
+                  key={index}
+                  style={{
+                    padding:"10px",
+                    borderBottom:"1px solid #eee",
+                    cursor:"pointer"
+                  }}
+                  onClick={()=>chooseLocation(r)}
+                >
+                  {r.display_name}
                 </div>
-              </div>
+              ))}
             </div>
           )}
 
-          {/* Address Input */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>
-              Delivery Address
-            </label>
-            <IonItem style={{ '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
-              <IonIcon icon={locationOutline} slot="start" color="primary" />
-              <IonInput
-                placeholder="Enter your delivery address"
-                value={address}
-                onIonChange={e => setAddress(e.detail.value!)}
-                style={{ '--color': 'var(--ion-text-color)' } as any}
-              />
-            </IonItem>
-          </div>
-
-          <div style={{ fontSize: '13px', color: 'var(--ion-text-color-secondary)' }}>
-            <p style={{ margin: 0 }}>📍 Your current location has been detected. You can edit the address if needed.</p>
-          </div>
         </div>
-      </IonContent>
 
-      {/* Footer */}
-      {selectedLocation && (
+        {/* MAP */}
+        <div style={{
+          height:"45vh",
+          borderRadius:"14px",
+          overflow:"hidden"
+        }}>
+          <MapContainer
+            center={center}
+            zoom={13}
+            style={{height:"100%",width:"100%"}}
+          >
+
+            <TileLayer
+              attribution='© OpenStreetMap'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            <ChangeMapView center={center}/>
+
+            {marker && <Marker position={marker}/>}
+
+          </MapContainer>
+
+        </div>
+
+      </IonContent>
         <IonFooter
           style={{
             '--background': 'var(--ion-card-background)',
@@ -160,10 +221,10 @@ const GuestLocationPicker: React.FC = () => {
             onClick={handleConfirmLocation}
           >
             <IonIcon slot="start" icon={locationOutline} />
-            Confirm Location
+            Confirm Route
           </IonButton>
         </IonFooter>
-      )}
+
     </IonPage>
   );
 };

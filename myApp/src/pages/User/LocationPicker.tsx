@@ -88,10 +88,10 @@ const LocationPicker: React.FC = () => {
               gap: '12px',
             }}
           >
-            <IonIcon icon={locationOutline} style={{ fontSize: '48px', color: '#6366F1' }} />
+            {/* <IonIcon icon={locationOutline} style={{ fontSize: '48px', color: '#6366F1' }} />
             <p style={{ margin: 0, textAlign: 'center', fontSize: '14px' }}>
               {loading ? 'Getting your location...' : 'Location acquired'}
-            </p>
+            </p> */}
           </div>
 
           {/* Location Info */}

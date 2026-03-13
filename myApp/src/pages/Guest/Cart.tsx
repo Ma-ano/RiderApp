@@ -25,8 +25,14 @@ const GuestCart: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [showGuestPrompt, setShowGuestPrompt] = useState(false);
 
+  // static data for fees - in real app, these would likely come from an API or config
   const deliveryFee = 2.99;
   const serviceFee = 1.49;
+  //this is the current location
+  const staticFromLocation = "Jollibee, E. Jacinto Street, San Vicente, Gapan, Nueva Ecija, Central Luzon, 3105, Philippines"
+  //this is the location of the stalls
+  const staticToLocation = "Calaba, San Isidro, Nueva Ecija, Central Luzon, 3108, Philippines"
+  
   const finalTotal = total + deliveryFee + serviceFee;
 
   const handleCheckout = () => {
