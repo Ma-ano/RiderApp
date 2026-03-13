@@ -10,8 +10,6 @@ export default defineConfig({
     react(),
     legacy()
   ],
-<<<<<<< HEAD
-<<<<<<< HEAD
   build: {
     target: 'es2020',
     minify: 'terser',
@@ -30,17 +28,11 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 600,
-=======
-=======
->>>>>>> dev
+  },
   server: {
     fs: {
       allow: ['..'],
     },
-<<<<<<< HEAD
->>>>>>> dev
-=======
->>>>>>> dev
   },
   test: {
     globals: true,
