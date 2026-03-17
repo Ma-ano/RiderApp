@@ -246,7 +246,11 @@ const VendorProducts: React.FC = () => {
               <IonCard key={product.id} className="product-card">
                 <IonCardContent>
                   <div className="product-image">
-                    <span className="emoji-icon">{product.image}</span>
+                    {product.image && product.image.startsWith('data:image') ? (
+                      <img src={product.image} alt={product.name} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px' }} />
+                    ) : (
+                      <span className="emoji-icon">{product.image}</span>
+                    )}
                     <div
                       className={`availability-badge ${product.available ? 'available' : 'unavailable'}`}
                     >
@@ -404,17 +408,40 @@ const VendorProducts: React.FC = () => {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Image (Emoji)</label>
-                <div className="emoji-selector">
-                  {['🍕', '🍔', '🍟', '🥗', '🍰', '🥤', '🍣', '🌮'].map((emoji) => (
-                    <button
-                      key={emoji}
-                      className={`emoji-btn ${formData.image === emoji ? 'selected' : ''}`}
-                      onClick={() => setFormData({ ...formData, image: emoji })}
-                    >
-                      {emoji}
-                    </button>
-                  ))}
+                <label className="form-label">Product Image</label>
+                <div className="image-upload-section">
+                  {formData.image && formData.image.startsWith('http') && (
+                    <div className="image-preview">
+                      <img src={formData.image} alt="Product preview" style={{ width: '100%', maxHeight: '200px', borderRadius: '8px', marginBottom: '12px', objectFit: 'cover' }} />
+                    </div>
+                  )}
+                  {formData.image && !formData.image.startsWith('http') && formData.image !== '🍕' && (
+                    <div className="image-preview">
+                      <img src={formData.image} alt="Product preview" style={{ width: '100%', maxHeight: '200px', borderRadius: '8px', marginBottom: '12px', objectFit: 'cover' }} />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                          const base64 = event.target?.result as string;
+                          setFormData({ ...formData, image: base64 });
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="form-file-input"
+                    id="product-image-input"
+                  />
+                  <label htmlFor="product-image-input" className="form-file-label" style={{ display: 'block', padding: '16px', border: '2px dashed var(--ion-border-color)', borderRadius: '8px', textAlign: 'center', cursor: 'pointer', backgroundColor: 'var(--ion-background-color)', transition: 'all 0.2s ease' }}>
+                    <IonIcon icon={imageOutline} style={{ fontSize: '32px', color: 'var(--ion-text-color-secondary)', marginBottom: '8px', display: 'block' }} />
+                    <span style={{ color: 'var(--ion-text-color-secondary)', fontSize: '14px' }}>Click to upload or drag and drop</span>
+                    <div style={{ fontSize: '12px', color: 'var(--ion-text-color-secondary)', marginTop: '4px' }}>PNG, JPG, JPEG (Max 5MB)</div>
+                  </label>
                 </div>
               </div>
 

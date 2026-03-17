@@ -30,7 +30,7 @@ import {
   arrowBack,
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import UserNavBar from '../../components/Navbar/UserNavBar';
 import { useAuth } from '../../context/AuthContext';
 import { Activity } from '../../types';
 
@@ -190,13 +190,7 @@ const ActivityLog: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <UserNavBar title="Activity Log" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Header with Back Button */}

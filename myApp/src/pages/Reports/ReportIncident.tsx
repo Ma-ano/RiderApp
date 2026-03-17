@@ -26,7 +26,7 @@ import {
   arrowBack,
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import UserNavBar from '../../components/Navbar/UserNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 const ReportIncident: React.FC = () => {
@@ -90,13 +90,7 @@ const ReportIncident: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <UserNavBar title="Report Incident" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Header with Back Button */}

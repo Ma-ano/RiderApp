@@ -7,6 +7,8 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { VendorAuthProvider } from './context/VendorAuthContext';
+import { NotificationProvider } from './context/NotificationContext';
+import AuthGuardRoute from './components/AuthGuardRoute';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -60,6 +62,8 @@ const ActivityLog = lazy(() => import('./pages/Activities/ActivityLog'));
 const Messages = lazy(() => import('./pages/Messages/Messages'));
 const ReportIncident = lazy(() => import('./pages/Reports/ReportIncident'));
 const Payment = lazy(() => import('./pages/Checkout/Payment'));
+const OrderSuccess = lazy(() => import('./pages/OrderSuccess/OrderSuccess'));
+const UserOrders = lazy(() => import('./pages/User/Orders'));
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 const VendorLogin = lazy(() => import('./pages/Vendor/VendorLogin'));
 const VendorRegister = lazy(() => import('./pages/Vendor/VendorRegister'));
@@ -71,6 +75,7 @@ const VendorInventory = lazy(() => import('./pages/Vendor/VendorInventory'));
 const VendorEarnings = lazy(() => import('./pages/Vendor/VendorEarnings'));
 const VendorReviews = lazy(() => import('./pages/Vendor/VendorReviews'));
 const VendorSettings = lazy(() => import('./pages/Vendor/VendorSettings'));
+const VendorMessages = lazy(() => import('./pages/Vendor/VendorMessages'));
 
 setupIonicReact({
   mode: 'ios',
@@ -83,7 +88,8 @@ const App: React.FC = () => (
       <AuthProvider>
         <VendorAuthProvider>
           <CartProvider>
-            <IonReactRouter>
+            <NotificationProvider>
+              <IonReactRouter>
               <IonRouterOutlet>
                 <Suspense fallback={<Loading />}>
                   {/* Guest Routes */}
@@ -104,9 +110,9 @@ const App: React.FC = () => (
                   <Route exact path="/rider/orders" component={RiderOrders} />
                   <Route exact path="/rider/earnings" component={RiderEarnings} />
                   <Route exact path="/rider/profile" component={RiderProfile} />
-                  <Route exact path="/rider/login" component={RiderLogin} />
+                  <AuthGuardRoute exact path="/rider/login" component={RiderLogin} mode="rider" />
                   <Route exact path="/rider/pending-approval" component={RiderPendingApproval} />
-                  <Route exact path="/rider/register" component={RiderRegister} />
+                  <AuthGuardRoute exact path="/rider/register" component={RiderRegister} mode="rider" />
                   
                   {/* Admin Routes */}
                   <Route exact path="/admin/dashboard" component={AdminDashboard} />
@@ -114,13 +120,13 @@ const App: React.FC = () => (
                   <Route exact path="/admin/riders" component={AdminRiders} />
                   <Route exact path="/admin/orders" component={AdminOrders} />
                   <Route exact path="/admin/reports" component={AdminReports} />
-                  <Route exact path="/admin/login" component={AdminLogin} />
-                  <Route exact path="/admin/register" component={AdminRegister} />
+                  <AuthGuardRoute exact path="/admin/login" component={AdminLogin} mode="admin" />
+                  <AuthGuardRoute exact path="/admin/register" component={AdminRegister} mode="admin" />
                   
                   {/* Vendor Routes */}
-                  <Route exact path="/vendor/login" component={VendorLogin} />
-                  <Route exact path="/vendor/register" component={VendorRegister} />
-                  <Route exact path="/vendor/forgot-password" component={VendorForgotPassword} />
+                  <AuthGuardRoute exact path="/vendor/login" component={VendorLogin} mode="vendor" />
+                  <AuthGuardRoute exact path="/vendor/register" component={VendorRegister} mode="vendor" />
+                  <AuthGuardRoute exact path="/vendor/forgot-password" component={VendorForgotPassword} mode="vendor" />
                   <Route exact path="/vendor/dashboard" component={VendorDashboard} />
                   <Route exact path="/vendor/orders" component={VendorOrders} />
                   <Route exact path="/vendor/products" component={VendorProducts} />
@@ -128,6 +134,7 @@ const App: React.FC = () => (
                   <Route exact path="/vendor/earnings" component={VendorEarnings} />
                   <Route exact path="/vendor/reviews" component={VendorReviews} />
                   <Route exact path="/vendor/settings" component={VendorSettings} />
+                  <Route exact path="/vendor/messages" component={VendorMessages} />
                   
                   {/* Activity & Messages Routes */}
                   <Route exact path="/activities" component={ActivityLog} />
@@ -138,10 +145,12 @@ const App: React.FC = () => (
                   
                   {/* Checkout Routes */}
                   <Route exact path="/checkout/payment" component={Payment} />
+                  <Route exact path="/order-success" component={OrderSuccess} />
+                  <Route exact path="/user/orders" component={UserOrders} />
                   
                   {/* Auth Routes */}
-                  <Route exact path="/login" component={Login} />
-                  <Route exact path="/register" component={Register} />
+                  <AuthGuardRoute exact path="/login" component={Login} mode="user" />
+                  <AuthGuardRoute exact path="/register" component={Register} mode="user" />
                   
                   {/* Default Redirect */}
                   <Route exact path="/">
@@ -150,6 +159,7 @@ const App: React.FC = () => (
                 </Suspense>
               </IonRouterOutlet>
             </IonReactRouter>
+            </NotificationProvider>
           </CartProvider>
         </VendorAuthProvider>
       </AuthProvider>

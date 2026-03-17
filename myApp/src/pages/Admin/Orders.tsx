@@ -15,7 +15,7 @@ import {
 } from '@ionic/react';
 import { cartOutline, timeOutline, checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import AdminNavBar from '../../components/Navbar/AdminNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminOrders: React.FC = () => {
@@ -117,13 +117,7 @@ const AdminOrders: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <AdminNavBar title="Orders" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Admin Navigation */}

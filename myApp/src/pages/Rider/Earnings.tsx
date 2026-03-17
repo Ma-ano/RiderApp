@@ -14,7 +14,7 @@ import {
 } from '@ionic/react';
 import { cashOutline, trendingUpOutline, downloadOutline, calendarOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import RiderNavBar from '../../components/Navbar/RiderNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 // Move data outside component to prevent recreation
@@ -75,13 +75,7 @@ const RiderEarnings: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <RiderNavBar title="Earnings" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Rider Navigation */}

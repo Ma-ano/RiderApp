@@ -26,7 +26,7 @@ import {
   close,
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import UserNavBar from '../../components/Navbar/UserNavBar';
 import { useAuth } from '../../context/AuthContext';
 import './Messages.css';
 
@@ -224,13 +224,7 @@ const Messages: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader
-        showLogo
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <UserNavBar title="Messages" />
 
       <IonContent>
         <div className="messages-header">

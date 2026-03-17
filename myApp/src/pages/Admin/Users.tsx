@@ -15,7 +15,7 @@ import {
 } from '@ionic/react';
 import { personOutline, trashOutline, lockOpenOutline, lockClosedOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import AdminNavBar from '../../components/Navbar/AdminNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminUsers: React.FC = () => {
@@ -92,13 +92,7 @@ const AdminUsers: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <AdminNavBar title="Users" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Admin Navigation */}

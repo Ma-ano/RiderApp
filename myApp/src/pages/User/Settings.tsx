@@ -16,9 +16,10 @@ import {
 } from '@ionic/react';
 import { settingsOutline, notificationsOutline, moonOutline, globeOutline, lockClosedOutline, informationCircleOutline, arrowBack } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import UserNavBar from '../../components/Navbar/UserNavBar';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import '../../styles/mobile-first-responsive.css';
 
 const UserSettings: React.FC = () => {
   const history = useHistory();
@@ -59,41 +60,30 @@ const UserSettings: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        title="Settings" 
-        showBack={false}
-        isLoggedIn={true}
-        onHomeClick={() => history.push('/user/home')}
-        onProfileClick={() => history.push('/user/profile')}
-        onSettingsClick={() => history.push('/user/settings')}
-        onLogoutClick={() => {
-          logout();
-          history.push('/guest/home');
-        }}
-      />
+      <UserNavBar title="Settings" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
-        <div style={{ padding: '16px' }}>
+        <div style={{ padding: '12px' }}>
           {/* Notifications Section */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <h3 style={{
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 700,
               color: 'var(--ion-text-color)',
-              marginBottom: '12px',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               opacity: 0.7,
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '6px'
             }}>
-              <IonIcon icon={notificationsOutline} style={{ fontSize: '18px' }} />
+              <IonIcon icon={notificationsOutline} style={{ fontSize: '16px' }} />
               Notifications
             </h3>
             <IonCard style={{ margin: 0, background: 'var(--ion-card-background)' }}>
-              <IonCardContent style={{ padding: '12px 0' }}>
-                <IonItem lines="inset" style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+              <IonCardContent style={{ padding: '8px 0' }}>
+                <IonItem lines="inset" style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     All Notifications
                   </IonLabel>
                   <IonToggle
@@ -103,8 +93,8 @@ const UserSettings: React.FC = () => {
                     style={{ marginRight: '0' }}
                   />
                 </IonItem>
-                <IonItem lines="inset" style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+                <IonItem lines="inset" style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Order Updates
                   </IonLabel>
                   <IonToggle
@@ -114,8 +104,8 @@ const UserSettings: React.FC = () => {
                     style={{ marginRight: '0' }}
                   />
                 </IonItem>
-                <IonItem lines="inset" style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+                <IonItem lines="inset" style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Email Notifications
                   </IonLabel>
                   <IonToggle
@@ -125,8 +115,8 @@ const UserSettings: React.FC = () => {
                     style={{ marginRight: '0' }}
                   />
                 </IonItem>
-                <IonItem lines="none" style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+                <IonItem lines="none" style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Push Notifications
                   </IonLabel>
                   <IonToggle
@@ -141,25 +131,25 @@ const UserSettings: React.FC = () => {
           </div>
 
           {/* Preferences Section */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <h3 style={{
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 700,
               color: 'var(--ion-text-color)',
-              marginBottom: '12px',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               opacity: 0.7,
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '6px'
             }}>
-              <IonIcon icon={globeOutline} style={{ fontSize: '18px' }} />
+              <IonIcon icon={globeOutline} style={{ fontSize: '16px' }} />
               Preferences
             </h3>
             <IonCard style={{ margin: 0, background: 'var(--ion-card-background)' }}>
-              <IonCardContent style={{ padding: '12px 0' }}>
-                <IonItem style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+              <IonCardContent style={{ padding: '8px 0' }}>
+                <IonItem style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Dark Mode
                   </IonLabel>
                   <IonToggle
@@ -169,15 +159,15 @@ const UserSettings: React.FC = () => {
                     style={{ marginRight: '0' }}
                   />
                 </IonItem>
-                <IonItem style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+                <IonItem style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Language
                   </IonLabel>
                   <IonSelect
                     slot="end"
                     value={settings.language}
                     onIonChange={(e) => handleSettingChange('language', e.detail.value)}
-                    style={{ color: 'var(--ion-text-color)' }}
+                    style={{ color: 'var(--ion-text-color)', fontSize: '12px' }}
                   >
                     <IonSelectOption value="en">English</IonSelectOption>
                     <IonSelectOption value="tl">Filipino</IonSelectOption>
@@ -188,25 +178,25 @@ const UserSettings: React.FC = () => {
           </div>
 
           {/* Privacy & Security Section */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <h3 style={{
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 700,
               color: 'var(--ion-text-color)',
-              marginBottom: '12px',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               opacity: 0.7,
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '6px'
             }}>
-              <IonIcon icon={lockClosedOutline} style={{ fontSize: '18px' }} />
+              <IonIcon icon={lockClosedOutline} style={{ fontSize: '16px' }} />
               Privacy & Security
             </h3>
             <IonCard style={{ margin: 0, background: 'var(--ion-card-background)' }}>
-              <IonCardContent style={{ padding: '12px 0' }}>
-                <IonItem lines="inset" style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+              <IonCardContent style={{ padding: '8px 0' }}>
+                <IonItem lines="inset" style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Location Sharing
                   </IonLabel>
                   <IonToggle
@@ -216,15 +206,15 @@ const UserSettings: React.FC = () => {
                     style={{ marginRight: '0' }}
                   />
                 </IonItem>
-                <IonItem style={{ '--background': 'transparent' } as any}>
-                  <IonLabel style={{ fontSize: '14px', color: 'var(--ion-text-color)' }}>
+                <IonItem style={{ '--background': 'transparent', '--padding-start': '10px', '--padding-end': '10px', '--inner-padding-end': '0', '--min-height': '40px' } as any}>
+                  <IonLabel style={{ fontSize: '12px', color: 'var(--ion-text-color)' }}>
                     Change Password
                   </IonLabel>
                   <IonButton
                     fill="outline"
                     size="small"
                     slot="end"
-                    style={{ '--color': 'var(--ion-color-primary)', marginRight: '0' }}
+                    style={{ '--color': 'var(--ion-color-primary)', marginRight: '0', fontSize: '11px', height: '30px' }}
                     onClick={() => history.push('/user/change-password')}
                   >
                     Change
@@ -235,28 +225,28 @@ const UserSettings: React.FC = () => {
           </div>
 
           {/* About Section */}
-          <div style={{ marginBottom: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
             <h3 style={{
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 700,
               color: 'var(--ion-text-color)',
-              marginBottom: '12px',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               opacity: 0.7,
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '6px'
             }}>
-              <IonIcon icon={informationCircleOutline} style={{ fontSize: '18px' }} />
+              <IonIcon icon={informationCircleOutline} style={{ fontSize: '16px' }} />
               About
             </h3>
             <IonCard style={{ margin: 0, background: 'var(--ion-card-background)' }}>
-              <IonCardContent style={{ padding: '12px' }}>
-                <div style={{ marginBottom: '12px' }}>
-                  <p style={{ margin: '0 0 4px', fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>
+              <IonCardContent style={{ padding: '8px' }}>
+                <div style={{ marginBottom: '8px' }}>
+                  <p style={{ margin: '0 0 2px', fontSize: '10px', color: 'var(--ion-text-color-secondary)' }}>
                     App Version
                   </p>
-                  <p style={{ margin: 0, color: 'var(--ion-text-color)', fontWeight: 600 }}>
+                  <p style={{ margin: 0, color: 'var(--ion-text-color)', fontWeight: 600, fontSize: '12px' }}>
                     1.0.0
                   </p>
                 </div>
@@ -265,9 +255,10 @@ const UserSettings: React.FC = () => {
                   fill="outline"
                   style={{
                     '--color': 'var(--ion-color-primary)',
-                    fontSize: '13px',
+                    fontSize: '11px',
                     fontWeight: 600,
-                    marginBottom: '8px'
+                    marginBottom: '6px',
+                    height: '32px'
                   }}
                 >
                   Terms of Service
@@ -277,8 +268,9 @@ const UserSettings: React.FC = () => {
                   fill="outline"
                   style={{
                     '--color': 'var(--ion-color-primary)',
-                    fontSize: '13px',
-                    fontWeight: 600
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    height: '32px'
                   }}
                 >
                   Privacy Policy
@@ -288,12 +280,12 @@ const UserSettings: React.FC = () => {
           </div>
 
           {/* Danger Zone */}
-          <div style={{ marginBottom: '32px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <h3 style={{
-              fontSize: '14px',
+              fontSize: '12px',
               fontWeight: 700,
               color: 'var(--ion-color-danger)',
-              marginBottom: '12px',
+              marginBottom: '8px',
               textTransform: 'uppercase',
               opacity: 0.8
             }}>
@@ -306,10 +298,10 @@ const UserSettings: React.FC = () => {
               style={{
                 '--border-color': '#EF5350',
                 '--color': '#EF5350',
-                fontSize: '14px',
+                fontSize: '12px',
                 fontWeight: 600,
-                marginBottom: '12px',
-                height: '40px'
+                marginBottom: '8px',
+                height: '36px'
               }}
               onClick={() => setShowResetAlert(true)}
             >
@@ -320,9 +312,9 @@ const UserSettings: React.FC = () => {
               color="danger"
               style={{
                 '--background': '#EF5350',
-                fontSize: '14px',
+                fontSize: '12px',
                 fontWeight: 600,
-                height: '40px'
+                height: '36px'
               }}
               onClick={() => setShowLogoutAlert(true)}
             >

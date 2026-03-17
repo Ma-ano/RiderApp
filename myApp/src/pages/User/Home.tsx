@@ -9,18 +9,16 @@ import {
   IonLabel,
   IonToolbar,
   IonButton,
-  IonHeader,
-  IonButtons,
   IonIcon,
-  IonBadge,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import StallCard from '../../components/Stall/StallCard';
+import UserNavBar from '../../components/Navbar/UserNavBar';
 import { Stall } from '../../types';
-import { cartOutline, personCircleOutline, settingsOutline, logOutOutline, moonOutline, sunnyOutline } from 'ionicons/icons';
+import '../../styles/mobile-first-responsive.css';
 
 // Mock data - Same stalls as Guest
 const MOCK_STALLS: Stall[] = [
@@ -64,10 +62,9 @@ const MOCK_STALLS: Stall[] = [
 
 const UserHome: React.FC = () => {
   const history = useHistory();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { itemCount } = useCart();
-  const { isDarkMode, toggleTheme } = useTheme();
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const { isDarkMode } = useTheme();
   const [stalls, setStalls] = useState<Stall[]>(MOCK_STALLS);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -86,307 +83,172 @@ const UserHome: React.FC = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const handleLogout = () => {
-    logout();
-    history.push('/guest/home');
-  };
-
   return (
     <IonPage>
-      {/* Custom Header with Profile Dropdown */}
-      <IonHeader className="ion-no-border">
-        <IonToolbar style={{ '--background': 'var(--ion-card-background)' } as any}>
-          <IonButtons slot="start">
-            <IonButton onClick={toggleTheme} fill="clear">
-              <IonIcon icon={isDarkMode ? sunnyOutline : moonOutline} color="primary" />
-            </IonButton>
-          </IonButtons>
-
-          <div style={{ textAlign: 'center', flex: 1 }}>
-            <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ion-text-color)', margin: 0 }}>
-              <span style={{ color: '#6366F1' }}>Rider</span> App
-            </h1>
-          </div>
-
-          <IonButtons slot="end">
-            <IonButton onClick={() => history.push('/user/cart')} fill="clear">
-              <div style={{ position: 'relative' }}>
-                <IonIcon icon={cartOutline} color="primary" />
-                {itemCount > 0 && (
-                  <IonBadge style={{ 
-                    position: 'absolute', 
-                    top: '-5px', 
-                    right: '-5px', 
-                    background: '#EF4444',
-                    width: '20px',
-                    height: '20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '12px',
-                    fontWeight: 600
-                  }}>
-                    {itemCount}
-                  </IonBadge>
-                )}
-              </div>
-            </IonButton>
-            <IonButton onClick={() => setProfileMenuOpen(!profileMenuOpen)} fill="clear">
-              <IonIcon icon={personCircleOutline} color="primary" />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-
-      {/* Profile Dropdown Menu */}
-      {profileMenuOpen && (
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-          position: 'absolute',
-          top: '60px',
-          right: '16px',
-          background: 'var(--ion-card-background)',
-          border: '1px solid var(--ion-border-color)',
-          borderRadius: '12px',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)',
-          zIndex: 1000,
-          minWidth: '240px',
-          maxWidth: '280px'
-        }}>
-          {/* Profile Info */}
-          <div style={{
-            padding: '16px',
-            cursor: 'pointer',
-            borderBottom: '1px solid var(--ion-border-color)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
-          }}
-          onClick={() => history.push('/user/profile')}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: '24px'
-            }}>
-              👤
-            </div>
-            <div>
-              <p style={{ margin: 0, fontSize: '14px', fontWeight: 600, color: 'var(--ion-text-color)' }}>{user?.name}</p>
-              <p style={{ margin: 0, fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>{user?.email}</p>
-            </div>
-          </div>
-
-          {/* Settings Button */}
-          <button
-            onClick={() => {
-              history.push('/user/settings');
-              setProfileMenuOpen(false);
-            }}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              border: 'none',
-              background: 'transparent',
-              color: 'var(--ion-text-color)',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 500,
-              borderBottom: '1px solid var(--ion-border-color)'
-            }}
-          >
-            <IonIcon icon={settingsOutline} style={{ color: '#6366F1', fontSize: '18px' }} />
-            <span>Settings</span>
-          </button>
-
-          {/* Logout Button */}
-          <button
-            onClick={() => {
-              handleLogout();
-              setProfileMenuOpen(false);
-            }}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              border: 'none',
-              background: 'transparent',
-              color: '#EF4444',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: 500
-            }}
-          >
-            <IonIcon icon={logOutOutline} style={{ color: '#EF4444', fontSize: '18px' }} />
-            <span>Logout</span>
-          </button>
-        </div>
-      )}
-
-      <IonToolbar style={{ '--background': 'var(--ion-background-color)', padding: '16px 0 0 0' } as any}>
-        <div style={{ padding: '12px 16px 16px 16px' }}>
+      <UserNavBar title="Home" showCart={true} cartCount={itemCount} />
+      
+      {/* Search Bar */}
+      <IonToolbar style={{ '--background': 'var(--ion-background-color)', padding: '0' } as any}>
+        <div style={{ padding: '4px 10px' }}>
           <IonSearchbar
             value={searchQuery}
             onIonChange={e => setSearchQuery(e.detail.value!)}
-            placeholder="Search food, stalls..."
+            placeholder="Search..."
+            className="searchbar-mobile"
             style={{
               '--background': 'var(--ion-card-background)',
-              '--border-radius': '12px',
+              '--border-radius': '8px',
               '--border': '1px solid var(--ion-border-color)',
               '--placeholder-color': 'var(--ion-text-color-secondary)',
               '--icon-color': 'var(--ion-color-primary)',
               '--color': 'var(--ion-text-color)',
-              padding: '0',
-              height: '48px',
-              '--box-shadow': '0 2px 12px rgba(99, 102, 241, 0.12)'
+              '--box-shadow': '0 1px 4px rgba(99, 102, 241, 0.08)',
+              height: '36px'
             } as any}
           />
         </div>
       </IonToolbar>
 
-      <IonContent style={{ '--background': 'var(--ion-background-color)' } as any} onClick={() => setProfileMenuOpen(false)}>
-        {/* Categories */}
-        <div style={{ padding: '16px 0', background: 'var(--ion-card-background)', display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--ion-border-color)' }}>
-          <div style={{ maxWidth: '100%', overflowX: 'auto', display: 'flex', justifyContent: 'center', paddingLeft: '16px', paddingRight: '16px' }}>
-            <IonSegment 
-              value={selectedCategory} 
-              onIonChange={e => setSelectedCategory(e.detail.value as string)}
-              scrollable
-              style={{ '--background': 'transparent', width: 'auto' } as any}
-            >
-              {categories.map(cat => (
-                <IonSegmentButton 
-                  key={cat} 
-                  value={cat.toLowerCase()}
-                  className="category-segment-btn"
-                  style={{ 
-                    '--color': 'var(--ion-text-color-secondary)',
-                    '--color-checked': '#FFFFFF',
-                    '--border-radius': '8px',
-                    '--indicator-color': 'transparent'
-                  } as any}
-                >
-                  <IonLabel style={{ fontSize: '14px', fontWeight: 600 }}>{cat}</IonLabel>
-                </IonSegmentButton>
-              ))}
-            </IonSegment>
-          </div>
-        </div>
-
-        {/* Role Navigation */}
-        <div style={{ 
-          padding: '16px', 
-          display: 'flex', 
-          gap: '12px',
-          background: 'var(--ion-background-color)',
-          borderBottomLeftRadius: '12px',
-          borderBottomRightRadius: '12px'
-        }}>
-          <IonButton
-            expand="block"
-            style={{
-              '--background': '#6366F1',
-              '--color': '#FFFFFF',
-              height: '44px',
-              fontSize: '14px',
-              fontWeight: 600,
-              textTransform: 'none'
-            }}
-            onClick={() => history.push('/user/home')}
+      {/* Categories Section */}
+      <div style={{ 
+        padding: '4px 0', 
+        background: 'var(--ion-card-background)', 
+        borderBottom: '1px solid var(--ion-border-color)',
+        overflow: 'hidden'
+      }}>
+        <div className="category-segment-mobile" style={{ padding: '4px 8px' }}>
+          <IonSegment 
+            value={selectedCategory} 
+            onIonChange={e => setSelectedCategory(e.detail.value as string)}
+            scrollable
+            style={{ '--background': 'transparent' } as any}
           >
-            🛒 Order Food
-          </IonButton>
+            {categories.map(cat => (
+              <IonSegmentButton 
+                key={cat} 
+                value={cat.toLowerCase()}
+                style={{ 
+                  '--color': 'var(--ion-text-color-secondary)',
+                  '--color-checked': '#FFFFFF',
+                  '--border-radius': '6px',
+                  '--indicator-color': 'transparent',
+                  fontSize: '12px',
+                  fontWeight: 600
+                } as any}
+              >
+                <IonLabel>{cat}</IonLabel>
+              </IonSegmentButton>
+            ))}
+          </IonSegment>
         </div>
+      </div>
 
-        {/* Stalls Grid */}
-        <div style={{ padding: '16px' }}>
-          {/* Quick Access Menu */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr',
-            gap: '10px',
-            marginBottom: '16px'
-          }}>
+      <IonContent style={{ '--background': 'var(--ion-background-color)', overflow: 'auto' } as any}>
+        {/* Quick Access Menu - Responsive Grid */}
+        <div style={{ padding: '10px 8px' }}>
+          <div className="quick-access-mobile" style={{ marginBottom: '8px' }}>
             <div 
               onClick={() => history.push('/activities')}
               style={{
-                padding: '12px',
+                padding: '8px 6px',
                 background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '65px'
               }}
             >
-              <div style={{ fontSize: '24px', marginBottom: '4px' }}>📋</div>
-              <p style={{ margin: 0, fontSize: '11px', fontWeight: 600 }}>Activities</p>
+              <div style={{ fontSize: '18px', marginBottom: '2px' }}>📋</div>
+              <p style={{ margin: 0, fontSize: '9px', fontWeight: 600 }}>Activities</p>
             </div>
             <div 
               onClick={() => history.push('/messages')}
               style={{
-                padding: '12px',
+                padding: '8px 6px',
                 background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '65px'
               }}
             >
-              <div style={{ fontSize: '24px', marginBottom: '4px' }}>💬</div>
-              <p style={{ margin: 0, fontSize: '11px', fontWeight: 600 }}>Messages</p>
+              <div style={{ fontSize: '18px', marginBottom: '2px' }}>💬</div>
+              <p style={{ margin: 0, fontSize: '9px', fontWeight: 600 }}>Messages</p>
             </div>
             <div 
               onClick={() => history.push('/report')}
               style={{
-                padding: '12px',
+                padding: '8px 6px',
                 background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '65px'
               }}
             >
-              <div style={{ fontSize: '24px', marginBottom: '4px' }}>⚠️</div>
-              <p style={{ margin: 0, fontSize: '11px', fontWeight: 600 }}>Report</p>
+              <div style={{ fontSize: '18px', marginBottom: '2px' }}>⚠️</div>
+              <p style={{ margin: 0, fontSize: '9px', fontWeight: 600 }}>Report</p>
             </div>
           </div>
 
-          <h2 style={{ 
-            fontSize: '20px', 
-            fontWeight: 700, 
+          {/* Popular Near You Section */}
+          <h2 className="mobile-h2" style={{ 
             color: 'var(--ion-text-color)',
-            margin: '16px 0 16px 0'
+            margin: '8px 0 8px 0',
+            fontWeight: 700,
+            fontSize: '16px'
           }}>
             Popular Near You
           </h2>
           
-          <div className="stalls-grid">
-            {filteredStalls.map(stall => (
-              <StallCard 
-                key={stall.id} 
-                stall={stall}
-                onClick={() => history.push(`/stall/${stall.id}`)}
-              />
-            ))}
+          {/* Stalls Grid - Responsive */}
+          <div className="stalls-grid-mobile">
+            {filteredStalls.length > 0 ? (
+              filteredStalls.map(stall => (
+                <StallCard 
+                  key={stall.id} 
+                  stall={stall}
+                  onClick={() => history.push(`/stall/${stall.id}`)}
+                />
+              ))
+            ) : (
+              <div style={{ 
+                gridColumn: '1 / -1',
+                textAlign: 'center', 
+                padding: '32px 16px',
+                color: 'var(--ion-text-color-secondary)'
+              }}>
+                <p style={{ fontSize: '14px' }}>No stalls found. Try a different search or category.</p>
+              </div>
+            )}
           </div>
         </div>
       </IonContent>
 
       {/* Footer */}
-      <div style={{ background: 'var(--ion-card-background)', borderTop: '1px solid var(--ion-border-color)', padding: '20px 16px', textAlign: 'center' }}>
-        <p style={{ textAlign: 'center', margin: '0', fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>
-          © 2026 Rider App. All rights reserved.
+      <div style={{ 
+        background: 'var(--ion-card-background)', 
+        borderTop: '1px solid var(--ion-border-color)', 
+        padding: '8px 12px',
+        textAlign: 'center' 
+      }}>
+        <p style={{ textAlign: 'center', margin: '0', fontSize: '10px', color: 'var(--ion-text-color-secondary)' }}>
+          © 2026 Rider App
         </p>
       </div>
     </IonPage>

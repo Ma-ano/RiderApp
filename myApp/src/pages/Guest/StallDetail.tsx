@@ -27,6 +27,18 @@ import { useTheme } from '../../context/ThemeContext';
 import { MenuItem as MenuItemType } from '../../types';
 import './StallDetail.css';
 
+// Mock inventory data for checking stock status
+const MOCK_INVENTORY = [
+  { id: '1', name: 'Margherita Pizza', currentStock: 5, minStock: 10, maxStock: 50 },
+  { id: '2', name: 'Pepperoni Pizza', currentStock: 8, minStock: 10, maxStock: 50 },
+  { id: '3', name: 'Caesar Salad', currentStock: 0, minStock: 15, maxStock: 40 },
+  { id: '4', name: 'Coca Cola', currentStock: 50, minStock: 30, maxStock: 100 },
+  { id: '5', name: 'Grilled Chicken Sandwich', currentStock: 2, minStock: 10, maxStock: 30 },
+  { id: '6', name: 'Vegetable Tempura Roll', currentStock: 0, minStock: 20, maxStock: 40 },
+  { id: '7', name: 'Cheese Fries', currentStock: 15, minStock: 10, maxStock: 30 },
+  { id: '8', name: 'Sweet Potato Fries', currentStock: 12, minStock: 8, maxStock: 20 },
+];
+
 // Mock stall info data
 const STALL_INFO: Record<string, any> = {
   '1': {
@@ -249,8 +261,20 @@ const StallDetail: React.FC = () => {
     if (isGuest) {
       setShowGuestPrompt(true);
     } else {
-      history.push('/checkout');
+      history.push('/user/cart');
     }
+  };
+
+  const getBackHref = () => {
+    return isGuest ? '/guest/home' : '/user/home';
+  };
+
+  const getCartRoute = () => {
+    return isGuest ? '/guest/cart' : '/user/cart';
+  };
+
+  const getProfileRoute = () => {
+    return isGuest ? '/login' : '/user/profile';
   };
 
   const getItemQuantity = (itemId: string) => {
@@ -258,15 +282,22 @@ const StallDetail: React.FC = () => {
     return cartItem?.quantity || 0;
   };
 
+  const isItemInStock = (itemName: string): boolean => {
+    const inventoryItem = MOCK_INVENTORY.find(inv => 
+      inv.name.toLowerCase() === itemName.toLowerCase()
+    );
+    return inventoryItem ? inventoryItem.currentStock > 0 : true;
+  };
+
   return (
     <IonPage className="stall-detail-page">
       <PageHeader 
         showBack={true}
-        backHref="/guest/home"
+        backHref={getBackHref()}
         customClass="stall-detail-header"
         cartCount={itemCount}
-        onCartClick={() => history.push('/guest/cart')}
-        onProfileClick={() => history.push('/login')}
+        onCartClick={() => history.push(getCartRoute())}
+        onProfileClick={() => history.push(getProfileRoute())}
       />
 
       <IonContent className="stall-detail-content" style={{ '--background': 'var(--ion-background-color)' } as any}>
@@ -358,6 +389,7 @@ const StallDetail: React.FC = () => {
                 item={item} 
                 onAdd={() => handleAddToCart(item)}
                 quantity={getItemQuantity(item.id)}
+                inStock={isItemInStock(item.name)}
               />
             ))}
           </div>

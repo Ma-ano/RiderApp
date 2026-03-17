@@ -16,7 +16,7 @@ import {
 } from '@ionic/react';
 import { mapOutline, cashOutline, checkmarkCircleOutline, timeOutline, navigateOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import RiderNavBar from '../../components/Navbar/RiderNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 const RiderHome: React.FC = () => {
@@ -66,13 +66,7 @@ const RiderHome: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <RiderNavBar title="Dashboard" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Rider Navigation */}

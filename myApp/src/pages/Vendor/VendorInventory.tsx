@@ -136,6 +136,8 @@ const MOCK_INVENTORY: InventoryItem[] = [
 
 interface EditFormData {
   quantity: string;
+  minStock: string;
+  maxStock: string;
   isActive: boolean;
 }
 
@@ -159,6 +161,8 @@ const VendorInventory: React.FC = () => {
   });
   const [formData, setFormData] = useState<EditFormData>({
     quantity: '',
+    minStock: '',
+    maxStock: '',
     isActive: true,
   });
 
@@ -174,6 +178,8 @@ const VendorInventory: React.FC = () => {
   const openEditModal = (item: InventoryItem) => {
     setFormData({
       quantity: item.currentStock.toString(),
+      minStock: item.minStock.toString(),
+      maxStock: item.maxStock.toString(),
       isActive: item.isActive,
     });
     setEditingId(item.id);
@@ -181,14 +187,21 @@ const VendorInventory: React.FC = () => {
   };
 
   const handleUpdateStock = () => {
-    if (!formData.quantity || isNaN(parseInt(formData.quantity, 10))) {
-      showToast('Please enter a valid quantity', 'error');
+    const quantity = parseInt(formData.quantity, 10);
+    const minStock = parseInt(formData.minStock, 10);
+    const maxStock = parseInt(formData.maxStock, 10);
+
+    if (isNaN(quantity) || isNaN(minStock) || isNaN(maxStock)) {
+      showToast('Please enter valid numbers', 'error');
       return;
     }
 
-    const newQuantity = parseInt(formData.quantity, 10);
-    const item = inventory.find((i) => i.id === editingId);
+    if (minStock >= maxStock) {
+      showToast('Min stock must be less than max stock', 'error');
+      return;
+    }
 
+    const item = inventory.find((i) => i.id === editingId);
     if (!item) return;
 
     setInventory(
@@ -196,14 +209,16 @@ const VendorInventory: React.FC = () => {
         i.id === editingId
           ? {
               ...i,
-              currentStock: newQuantity,
+              currentStock: quantity,
+              minStock: minStock,
+              maxStock: maxStock,
               isActive: formData.isActive,
             }
           : i
       )
     );
 
-    showToast('Stock updated successfully!', 'success');
+    showToast('Inventory updated successfully!', 'success');
     setShowModal(false);
   };
 
@@ -457,10 +472,10 @@ const VendorInventory: React.FC = () => {
           <IonContent>
             <div className="modal-form">
               <div className="form-group">
-                <label className="form-label">Quantity</label>
+                <label className="form-label">Current Stock *</label>
                 <IonInput
                   type="number"
-                  placeholder="Enter quantity"
+                  placeholder="Enter current quantity"
                   value={formData.quantity}
                   onIonChange={(e) =>
                     setFormData({ ...formData, quantity: e.detail.value || '' })
@@ -468,6 +483,35 @@ const VendorInventory: React.FC = () => {
                   min="0"
                   className="form-input"
                 />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label className="form-label">Minimum Stock *</label>
+                  <IonInput
+                    type="number"
+                    placeholder="Minimum quantity"
+                    value={formData.minStock}
+                    onIonChange={(e) =>
+                      setFormData({ ...formData, minStock: e.detail.value || '' })
+                    }
+                    min="0"
+                    className="form-input"
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Maximum Stock *</label>
+                  <IonInput
+                    type="number"
+                    placeholder="Maximum quantity"
+                    value={formData.maxStock}
+                    onIonChange={(e) =>
+                      setFormData({ ...formData, maxStock: e.detail.value || '' })
+                    }
+                    min="0"
+                    className="form-input"
+                  />
+                </div>
               </div>
 
               <div className="form-group">

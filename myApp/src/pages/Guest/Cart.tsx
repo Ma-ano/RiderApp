@@ -48,7 +48,7 @@ const GuestCart: React.FC = () => {
     if (isGuest) {
       setShowGuestPrompt(true);
     } else {
-      history.push('/checkout/payment');
+      history.push('/checkout');
     }
   };
 

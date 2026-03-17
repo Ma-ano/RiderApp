@@ -57,16 +57,41 @@ export interface Rider {
   createdAt: Date;
 }
 
+export interface Vendor {
+  id: string;
+  fullName: string;
+  businessName: string;
+  email: string;
+  phone: string;
+  storeAddress?: string;
+  storeCategory?: string;
+  image?: string;
+  rating?: number;
+  totalOrders?: number;
+  status?: 'active' | 'offline';
+  createdAt: Date;
+}
+
 export interface Order {
   id: string;
+  userId: string;
+  vendorId?: string;
+  riderId?: string;
   items: CartItem[];
   total: number;
   deliveryFee: number;
-  status: 'pending' | 'preparing' | 'delivering' | 'delivered' | 'cancelled';
-  createdAt: Date;
   stallName: string;
-  riderId?: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'preparing' | 'ready_for_pickup' | 'rider_accepted' | 'delivering' | 'delivered' | 'cancelled';
+  customerName: string;
+  customerPhone: string;
+  deliveryAddress: string;
+  createdAt: Date;
+  acceptedAt?: Date;
+  readyAt?: Date;
+  pickedUpAt?: Date;
+  deliveredAt?: Date;
   estimatedDeliveryTime?: string;
+  notes?: string;
 }
 
 export interface RiderOrder extends Order {
@@ -99,18 +124,41 @@ export interface Activity {
   severity?: 'info' | 'warning' | 'critical';
 }
 
-// User-to-Rider Messaging/Notes
+// User-to-Rider, Vendor-to-User, Vendor-to-Rider Messaging
 export interface Message {
   id: string;
   senderId: string;
-  senderRole: 'user' | 'rider';
+  senderRole: 'user' | 'rider' | 'vendor';
   receiverId: string;
   orderId?: string;
   content: string;
   attachments?: string[];
   isRead: boolean;
+  messageType: 'text' | 'notification' | 'system';
   createdAt: Date;
   updatedAt: Date;
+}
+
+// Real-time Notifications
+export interface Notification {
+  id: string;
+  userId?: string; // recipient user
+  vendorId?: string; // recipient vendor
+  riderId?: string; // recipient rider
+  orderId: string;
+  type: 'order_placed' | 'order_accepted' | 'order_rejected' | 'order_preparing' | 'order_ready' | 'rider_accepted' | 'rider_on_way' | 'order_delivered' | 'order_cancelled' | 'message' | 'status_update';
+  title: string;
+  message: string;
+  data?: {
+    orderId?: string;
+    stallName?: string;
+    customerName?: string;
+    riderName?: string;
+    estimatedTime?: string;
+    amount?: number;
+  };
+  isRead: boolean;
+  createdAt: Date;
 }
 
 // Incident Report System

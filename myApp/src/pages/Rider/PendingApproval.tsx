@@ -8,7 +8,7 @@ import {
 } from '@ionic/react';
 import { arrowBack, checkmarkCircleOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import RiderNavBar from '../../components/Navbar/RiderNavBar';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 
@@ -25,7 +25,7 @@ const PendingApproval: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader title="Pending Approval" showBack={true} backHref="/guest/home" />
+      <RiderNavBar title="Pending Approval" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         <div style={{

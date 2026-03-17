@@ -15,6 +15,7 @@ import {
 import { locationOutline, arrowBack } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import '../../styles/mobile-first-responsive.css';
 
 const LocationPicker: React.FC = () => {
   const history = useHistory();
@@ -70,22 +71,22 @@ const LocationPicker: React.FC = () => {
       </IonHeader>
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
-        <div style={{ padding: '24px 16px' }}>
+        <div style={{ padding: '12px' }}>
           {/* Map Placeholder */}
           <div
             style={{
               width: '100%',
-              height: '40vh',
+              height: '35vh',
               background: 'var(--ion-card-background)',
-              borderRadius: '12px',
+              borderRadius: '8px',
               border: '1px solid var(--ion-border-color)',
-              marginBottom: '24px',
+              marginBottom: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               flexDirection: 'column',
               color: 'var(--ion-text-color-secondary)',
-              gap: '12px',
+              gap: '8px',
             }}
           >
             {/* <IonIcon icon={locationOutline} style={{ fontSize: '48px', color: '#6366F1' }} />
@@ -99,26 +100,26 @@ const LocationPicker: React.FC = () => {
             <div
               style={{
                 background: 'var(--ion-card-background)',
-                padding: '16px',
-                borderRadius: '12px',
+                padding: '10px',
+                borderRadius: '8px',
                 border: '1px solid var(--ion-border-color)',
-                marginBottom: '24px',
+                marginBottom: '12px',
               }}
             >
-              <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <IonIcon
                   icon={locationOutline}
-                  style={{ color: '#6366F1', fontSize: '20px', minWidth: '20px' }}
+                  style={{ color: '#6366F1', fontSize: '18px', minWidth: '18px' }}
                 />
                 <div>
-                  <p style={{ margin: '0 0 8px', fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>
+                  <p style={{ margin: '0 0 4px', fontSize: '10px', color: 'var(--ion-text-color-secondary)' }}>
                     Selected Location
                   </p>
-                  <p style={{ margin: '0 0 8px', fontWeight: 600, color: 'var(--ion-text-color)' }}>
-                    Latitude: {selectedLocation.lat.toFixed(6)}
+                  <p style={{ margin: '0 0 3px', fontWeight: 600, color: 'var(--ion-text-color)', fontSize: '11px' }}>
+                    Lat: {selectedLocation.lat.toFixed(6)}
                   </p>
-                  <p style={{ margin: 0, fontWeight: 600, color: 'var(--ion-text-color)' }}>
-                    Longitude: {selectedLocation.lng.toFixed(6)}
+                  <p style={{ margin: 0, fontWeight: 600, color: 'var(--ion-text-color)', fontSize: '11px' }}>
+                    Lng: {selectedLocation.lng.toFixed(6)}
                   </p>
                 </div>
               </div>
@@ -126,23 +127,23 @@ const LocationPicker: React.FC = () => {
           )}
 
           {/* Address Input */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>
+          <div style={{ marginBottom: '12px' }}>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: 600, color: 'var(--ion-text-color)', textTransform: 'uppercase', opacity: 0.7 }}>
               Delivery Address
             </label>
-            <IonItem style={{ '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)' } as any}>
-              <IonIcon icon={locationOutline} slot="start" color="primary" />
+            <IonItem style={{ '--background': 'var(--ion-card-background)', '--border': '1px solid var(--ion-border-color)', '--padding-start': '8px', '--padding-end': '8px', '--min-height': '36px' } as any}>
+              <IonIcon icon={locationOutline} slot="start" color="primary" style={{ fontSize: '16px', marginRight: '4px' }} />
               <IonInput
-                placeholder="Enter your delivery address"
+                placeholder="Enter address"
                 value={address}
                 onIonChange={e => setAddress(e.detail.value!)}
-                style={{ '--color': 'var(--ion-text-color)' } as any}
+                style={{ '--color': 'var(--ion-text-color)', '--placeholder-color': 'var(--ion-text-color-secondary)', fontSize: '12px' } as any}
               />
             </IonItem>
           </div>
 
-          <div style={{ fontSize: '13px', color: 'var(--ion-text-color-secondary)' }}>
-            <p style={{ margin: 0 }}>📍 Your current location has been detected. You can edit the address if needed.</p>
+          <div style={{ fontSize: '11px', color: 'var(--ion-text-color-secondary)' }}>
+            <p style={{ margin: 0 }}>📍 Location detected. Edit address if needed.</p>
           </div>
         </div>
       </IonContent>
@@ -152,7 +153,7 @@ const LocationPicker: React.FC = () => {
         <IonFooter
           style={{
             '--background': 'var(--ion-card-background)',
-            padding: '16px',
+            padding: '10px',
             borderTop: '1px solid var(--ion-border-color)',
           } as any}
         >
@@ -161,9 +162,9 @@ const LocationPicker: React.FC = () => {
             size="large"
             style={{
               '--background': '#6366F1',
-              '--border-radius': '8px',
-              height: '48px',
-              fontSize: '16px',
+              '--border-radius': '6px',
+              height: '40px',
+              fontSize: '13px',
               fontWeight: 700,
             }}
             onClick={handleConfirmLocation}

@@ -19,7 +19,7 @@ import {
 } from '@ionic/react';
 import { peopleOutline, bicycleOutline, cartOutline, trendingUpOutline, warningOutline, settingsOutline, logOutOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import AdminNavBar from '../../components/Navbar/AdminNavBar';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminDashboard: React.FC = () => {
@@ -50,13 +50,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        showLogo={true}
-        onProfileClick={() => {
-          logout();
-          history.push('/login');
-        }}
-      />
+      <AdminNavBar title="Dashboard" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
         {/* Admin Navigation */}

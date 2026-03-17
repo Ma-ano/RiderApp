@@ -21,10 +21,12 @@ import {
 import { arrowBack, cardOutline, phonePortraitOutline, walletOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 const Payment: React.FC = () => {
   const history = useHistory();
-  const { total } = useCart();
+  const { total, items, clearCart } = useCart();
+  const { isGuest } = useAuth();
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [cardDetails, setCardDetails] = useState({
     cardNumber: '',
@@ -42,12 +44,41 @@ const Payment: React.FC = () => {
 
   const handlePayment = async () => {
     setLoading(true);
+    
+    // Create order object
+    const newOrder = {
+      id: `ORD-${Date.now()}`,
+      items: items,
+      subtotal: total,
+      deliveryFee: deliveryFee,
+      serviceFee: serviceFee,
+      total: finalTotal,
+      paymentMethod: paymentMethod,
+      status: 'pending',
+      vendorStatus: 'received', // vendor is preparing
+      riderStatus: 'waiting', // rider waiting to pick up
+      timestamp: new Date().toISOString(),
+      deliveryAddress: sessionStorage.getItem('locationName') || 'Delivery Location',
+    };
+
+    // Save order to localStorage
+    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+    existingOrders.push(newOrder);
+    localStorage.setItem('orders', JSON.stringify(existingOrders));
+
     // Simulate payment processing
     setTimeout(() => {
       setLoading(false);
-      // Navigate to success page or show confirmation
-      history.push('/');
-      alert('Payment successful!');
+      clearCart();
+      sessionStorage.removeItem('selectedLocation');
+      sessionStorage.removeItem('locationName');
+      
+      // Route based on user type
+      if (isGuest) {
+        history.push('/order-success', { orderId: newOrder.id });
+      } else {
+        history.push('/order-success', { orderId: newOrder.id });
+      }
     }, 2000);
   };
 

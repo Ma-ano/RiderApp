@@ -15,9 +15,17 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "clean": "rmdir /s /q dist"
   },
   "dependencies": {
+    "@capacitor/app": "8.0.1",
+    "@capacitor/cli": "8.2.0",
+    "@capacitor/core": "8.2.0",
+    "@capacitor/haptics": "8.0.1",
+    "@capacitor/keyboard": "8.0.1",
+    "@capacitor/status-bar": "8.0.1",
     "@ionic/cli": "^7.2.1",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",

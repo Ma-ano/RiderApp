@@ -5,17 +5,13 @@ import {
   IonContent,
   IonButton,
   IonIcon,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonList,
-  IonListHeader,
 } from '@ionic/react';
-import { personOutline, mailOutline, callOutline, logOutOutline, settingsOutline, documentTextOutline, chatbubbleOutline, alertCircleOutline } from 'ionicons/icons';
+import { personOutline, mailOutline, callOutline, logOutOutline, settingsOutline } from 'ionicons/icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useHistory } from 'react-router-dom';
-import PageHeader from '../../components/PageHeader';
+import UserNavBar from '../../components/Navbar/UserNavBar';
 import { useAuth } from '../../context/AuthContext';
+import '../../styles/mobile-first-responsive.css';
 
 const UserProfile: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -39,52 +35,36 @@ const UserProfile: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader 
-        title="My Profile" 
-        showBack={false}
-        isLoggedIn={true}
-        onHomeClick={() => history.push('/user/home')}
-        onProfileClick={() => history.push('/user/profile')}
-        onSettingsClick={() => history.push('/user/settings')}
-        onLogoutClick={() => {
-          logout();
-          history.push('/guest/home');
-        }}
-      />
+      <UserNavBar title="My Profile" />
 
       <IonContent style={{ '--background': 'var(--ion-background-color)' } as any}>
-        <div style={{ padding: '24px 16px' }}>
+        <div style={{ padding: '12px' }} className="mobile-container-lg">
           {/* Profile Avatar Section */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '32px',
-            paddingTop: '16px'
-          }}>
+          <div className="profile-section-mobile" style={{ paddingTop: '8px', marginBottom: '16px' }}>
             <div style={{
-              width: '80px',
-              height: '80px',
+              width: '60px',
+              height: '60px',
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #6366F1 0%, #EC4899 100%)',
-              margin: '0 auto 16px',
+              margin: '0 auto 10px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}>
               <IonIcon 
                 icon={personOutline} 
-                style={{ fontSize: '40px', color: '#FFFFFF' }} 
+                style={{ fontSize: '30px', color: '#FFFFFF' }} 
               />
             </div>
-            <h1 style={{ 
-              fontSize: '24px', 
-              fontWeight: 700, 
+            <h1 className="mobile-h2" style={{ 
               color: 'var(--ion-text-color)',
-              margin: '0 0 8px 0'
+              margin: '0 0 2px 0',
+              fontSize: '18px'
             }}>
               {profile.name}
             </h1>
             <p style={{ 
-              fontSize: '14px', 
+              fontSize: '11px', 
               color: 'var(--ion-text-color-secondary)',
               margin: 0
             }}>
@@ -93,173 +73,181 @@ const UserProfile: React.FC = () => {
           </div>
 
           {/* Profile Information */}
-          <div style={{
-            background: 'var(--ion-card-background)',
-            borderRadius: '12px',
-            padding: '16px',
-            marginBottom: '24px',
-            border: '1px solid var(--ion-border-color)'
-          }}>
+          <div className="mobile-card" style={{marginBottom: '12px', padding: '12px'}}>
             <h3 style={{ 
-              fontSize: '14px', 
+              fontSize: '11px', 
               fontWeight: 600, 
               color: 'var(--ion-text-color)', 
-              marginBottom: '16px',
+              marginBottom: '10px',
               textTransform: 'uppercase',
               opacity: 0.7
             }}>
-              Contact Information
+              Contact Info
             </h3>
 
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <IonIcon icon={personOutline} style={{ marginRight: '8px', color: '#6366F1' }} />
-                <label style={{ fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>Full Name</label>
+            <div className="form-group-mobile" style={{ marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <IonIcon icon={personOutline} style={{ marginRight: '6px', color: '#6366F1', fontSize: '16px' }} />
+                <label style={{ fontSize: '11px', color: 'var(--ion-text-color-secondary)' }}>Name</label>
               </div>
               <input
                 type="text"
                 value={profile.name}
                 onChange={(e) => setProfile({...profile, name: e.target.value})}
+                className="form-input-mobile"
                 style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   border: '1px solid var(--ion-border-color)',
                   background: isDarkMode ? '#111827' : '#F9FAFB',
                   color: 'var(--ion-text-color)',
                   fontFamily: 'inherit',
-                  fontSize: '14px'
+                  padding: '8px 10px',
+                  fontSize: '13px',
+                  height: '36px'
                 }}
               />
             </div>
 
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <IonIcon icon={mailOutline} style={{ marginRight: '8px', color: '#6366F1' }} />
-                <label style={{ fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>Email</label>
+            <div className="form-group-mobile" style={{ marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <IonIcon icon={mailOutline} style={{ marginRight: '6px', color: '#6366F1', fontSize: '16px' }} />
+                <label style={{ fontSize: '11px', color: 'var(--ion-text-color-secondary)' }}>Email</label>
               </div>
               <input
                 type="email"
                 value={profile.email}
                 onChange={(e) => setProfile({...profile, email: e.target.value})}
+                className="form-input-mobile"
                 style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   border: '1px solid var(--ion-border-color)',
                   background: isDarkMode ? '#111827' : '#F9FAFB',
                   color: 'var(--ion-text-color)',
                   fontFamily: 'inherit',
-                  fontSize: '14px'
+                  padding: '8px 10px',
+                  fontSize: '13px',
+                  height: '36px'
                 }}
               />
             </div>
 
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <IonIcon icon={callOutline} style={{ marginRight: '8px', color: '#6366F1' }} />
-                <label style={{ fontSize: '12px', color: 'var(--ion-text-color-secondary)' }}>Phone</label>
+            <div className="form-group-mobile">
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                <IonIcon icon={callOutline} style={{ marginRight: '6px', color: '#6366F1', fontSize: '16px' }} />
+                <label style={{ fontSize: '11px', color: 'var(--ion-text-color-secondary)' }}>Phone</label>
               </div>
               <input
                 type="tel"
                 value={profile.phone}
                 onChange={(e) => setProfile({...profile, phone: e.target.value})}
+                className="form-input-mobile"
                 style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   border: '1px solid var(--ion-border-color)',
                   background: isDarkMode ? '#111827' : '#F9FAFB',
                   color: 'var(--ion-text-color)',
                   fontFamily: 'inherit',
-                  fontSize: '14px'
+                  padding: '8px 10px',
+                  fontSize: '13px',
+                  height: '36px'
                 }}
               />
             </div>
           </div>
 
           {/* Quick Access Menu */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr 1fr',
-            gap: '10px',
-            marginBottom: '20px'
-          }}>
+          <div className="quick-access-mobile" style={{marginBottom: '12px'}}>
             <div 
               onClick={() => history.push('/activities')}
               style={{
-                padding: '12px',
+                padding: '8px 6px',
                 background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '60px'
               }}
             >
-              <div style={{ fontSize: '20px', marginBottom: '4px' }}>📋</div>
-              <p style={{ margin: 0, fontSize: '10px', fontWeight: 600 }}>Activity</p>
+              <div style={{ fontSize: '16px', marginBottom: '2px' }}>📋</div>
+              <p style={{ margin: 0, fontSize: '9px', fontWeight: 600 }}>Activity</p>
             </div>
             <div 
               onClick={() => history.push('/messages')}
               style={{
-                padding: '12px',
+                padding: '8px 6px',
                 background: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 textAlign: 'center',
-                color: 'white'
+                color: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '60px'
               }}
             >
-              <div style={{ fontSize: '20px', marginBottom: '4px' }}>💬</div>
-              <p style={{ margin: 0, fontSize: '10px', fontWeight: 600 }}>Messages</p>
+              <div style={{ fontSize: '16px', marginBottom: '2px' }}>💬</div>
+              <p style={{ margin: 0, fontSize: '9px', fontWeight: 600 }}>Messages</p>
             </div>
             <div 
               onClick={() => history.push('/report')}
               style={{
-                padding: '12px',
+                padding: '8px 6px',
                 background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%)',
-                borderRadius: '12px',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 textAlign: 'center',
-                color: '#1F2937'
+                color: '#1F2937',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '60px'
               }}
             >
-              <div style={{ fontSize: '20px', marginBottom: '4px' }}>⚠️</div>
-              <p style={{ margin: 0, fontSize: '10px', fontWeight: 600 }}>Report</p>
+              <div style={{ fontSize: '16px', marginBottom: '2px' }}>⚠️</div>
+              <p style={{ margin: 0, fontSize: '9px', fontWeight: 600 }}>Report</p>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <IonButton
-            expand="block"
-            style={{
-              '--background': '#6366F1',
-              '--border-radius': '8px',
-              height: '48px',
-              fontSize: '16px',
-              fontWeight: 600,
-              marginBottom: '12px'
-            }}
-            onClick={() => history.push('/user/settings')}
-          >
-            <IonIcon icon={settingsOutline} slot="start" />
-            Settings
-          </IonButton>
+          <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+            <IonButton
+              expand="block"
+              style={{
+                '--background': '#6366F1',
+                '--border-radius': '6px',
+                height: '40px',
+                fontSize: '13px',
+                fontWeight: 600
+              }}
+              onClick={() => history.push('/user/settings')}
+            >
+              <IonIcon icon={settingsOutline} slot="start" />
+              Settings
+            </IonButton>
 
-          <IonButton
-            expand="block"
-            color="danger"
-            style={{
-              '--border-radius': '8px',
-              height: '48px',
-              fontSize: '16px',
-              fontWeight: 600
-            }}
-            onClick={handleLogout}
-          >
-            <IonIcon icon={logOutOutline} slot="start" />
-            Sign Out
-          </IonButton>
+            <IonButton
+              expand="block"
+              color="danger"
+              style={{
+                '--border-radius': '6px',
+                height: '40px',
+                fontSize: '13px',
+                fontWeight: 600
+              }}
+              onClick={() => {logout(); history.push('/login');}}
+            >
+              <IonIcon icon={logOutOutline} slot="start" />
+              Sign Out
+            </IonButton>
+          </div>
         </div>
       </IonContent>
     </IonPage>
